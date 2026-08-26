@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Walton Plaza Product Experience
 
-## Getting Started
+A high-performance product listing and detail experience built for the Walton Plaza frontend evaluation.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js App Router 16
+- React 19 (`useOptimistic` for add-to-cart feedback)
+- TypeScript strict mode
+- Tailwind CSS 4
+- Apollo Client with an in-memory cache
+- Walton Plaza GraphQL API
+
+## Getting started
+
+Create `.env.local` if you want to override the default API endpoint:
+
+```env
+NEXT_PUBLIC_GRAPHQL_URL=https://devapi.waltonplaza.com.bd/graphql
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then run:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open `http://localhost:3000`. The product listing uses the live API and product details are available at `/products/[uid]`.
 
-## Learn More
+## Architecture
 
-To learn more about Next.js, take a look at the following resources:
+- `src/app/page.tsx` is the server-rendered product listing route. It fetches a paginated slice using the API's `skip` and `limit` fields.
+- `src/app/products/[uid]/page.tsx` is the dynamic server-rendered product detail route.
+- `src/lib/apollo.ts`, `queries.ts`, `data.ts`, and `types.ts` form the typed GraphQL/data layer. Apollo's `InMemoryCache` uses `cache-first` reads.
+- Interactive filters, product interactions, tabs, variants, and cart behavior are isolated in client components.
+- `src/lib/cart.tsx` provides add, remove, update, clear, optimistic feedback, and localStorage persistence.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Product behavior
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Pagination is used because the API explicitly provides offset pagination with `skip` and `limit`; it keeps the initial payload small.
+- Product cards use `next/image`, responsive `sizes`, remote image configuration, lazy loading, a missing-image fallback, and hover feedback.
+- The live API exposes brand-like attributes, so the listing's category control uses available brand attributes. Rating is not present in the documented or tested live response, so no rating data is fabricated.
+- API arrays may be null or empty and are rendered safely. Products with zero quantity cannot be added to the cart.
+- Product descriptions from the API may contain HTML; this implementation displays structured API attributes safely. Any future raw HTML rendering should be sanitized first.
 
-## Deploy on Vercel
+## Pricing note
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The reference document says `discount.value` is the final selling price and describes lowercase discount types. The verified live response for `P-4TCF9V` returned `type: "PERCENTAGE"`, `amount: 5199`, and `value: 10` for an MRP of `51990`. The app therefore normalizes the type case and calculates the final price from `mrpPrice` and `discount.amount`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Verification
+
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+The included `postman.json` collection tests the documented GraphQL endpoint. The Walton server may close connections for Postman's default runtime user agent, so the collection overrides it with `Mozilla/5.0` and uses `Connection: close`.

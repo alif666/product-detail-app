@@ -109,17 +109,20 @@ API behavior to handle:
 - `images` may be empty; use a placeholder.
 - Information arrays may be null or empty; hide the tab or show a no-information message.
 - The documented API fields do not include category or rating fields, although the evaluation asks for category/availability filters and rating sorting. Confirm whether the live API exposes additional fields; otherwise document the limitation and implement only defensible client-side behavior.
+- Verified live response for `P-4TCF9V`: HTTP 200, API status 200, message `SUCCESS`, count 1, product name `Safe Non-Inverter AC 1 Ton | SSN12AFB1-SLRG`, one CDN image, and one variant with MRP `51990`, quantity `493`, discount amount `5199`, discount value `10`, and type `PERCENTAGE`.
+- The live response contradicts the DOCX description of `discount.value`; calculate selling price from MRP and amount, and normalize discount type casing.
 
 ## Current project status
 
 - The workspace initially contained only the source PDF, API DOCX, and a minimal README; the Next.js scaffold has since been generated.
 - Current scaffold uses Next.js `16.3.3`, React/React DOM `19.2.8`, TypeScript, Tailwind CSS, and Apollo Client `4.2.12` (exact installed versions are recorded in `package.json` and `package-lock.json`).
-- Current source is still the default scaffold: `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/globals.css`, and the default `public` assets. No assignment features have been implemented yet.
+- The assignment implementation is now present in `src/app`, `src/components`, and `src/lib`: PLP, PDP, Apollo data layer, typed models, pagination, filters, product cards, variant pricing, and cart persistence.
 - `node_modules` and `.next` are present locally; they are generated artifacts and should not be treated as source deliverables.
 - A Postman v2.1 collection was created at `postman.json`.
 - The collection has variables: `baseUrl`, `uid`, `posItemCode`, `skip`, and `limit`.
 - Its default request fetches product details by UID `P-4TCF9V` and includes basic Postman tests for HTTP success, `getProducts`, and API `statusCode`.
 - The Postman request sets `posItemCode` to `null` while querying by UID. To query by POS item code, set `uid` to `null` and use the `posItemCode` variable in the request JSON.
+- The collection now overrides Postman's default user agent with `Mozilla/5.0`, limits accepted compression to gzip/deflate, and sends `Connection: close`; these work around the Walton server's connection reset behavior.
 
 ## Initial setup command already recommended
 
@@ -138,3 +141,4 @@ This has already been run successfully in this workspace. It established the Nex
 - Use GraphQL Code Generator or another typed-query approach rather than manually duplicating API types.
 - Configure the endpoint through an environment variable such as `NEXT_PUBLIC_GRAPHQL_URL`.
 - Add README architecture notes, trade-offs, API limitations, and setup/test instructions before submission.
+- Current verification: `npm run lint`, `npx tsc --noEmit`, and `npm run build` all pass after implementation.
