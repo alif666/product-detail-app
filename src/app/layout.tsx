@@ -1,30 +1,30 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type {Metadata} from "next";
+import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
-import { CartProvider } from "@/lib/cart";
+import {CartProvider} from "@/lib/cart";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+    variable: "--font-geist-sans",
+    subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Walton Plaza | Home Appliances",
-  description: "Explore Walton products and find the right appliance for your home.",
+    title: "Walton Plaza | Home Appliances",
+    description: "Explore Walton products and find the right appliance for your home.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
-  return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col"><CartProvider>{children}</CartProvider></body>
-    </html>
-  );
+export default function RootLayout({children}: LayoutProps<"/">) {
+    return (
+        <html
+            lang="en"
+            className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+        >
+        <body className="min-h-full flex flex-col"><CartProvider>{children}</CartProvider></body>
+        </html>
+    );
 }
