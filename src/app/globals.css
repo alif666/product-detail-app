@@ -1,32 +1,70 @@
 @import "tailwindcss";
 
-:root { --background: #f4f8fa; --foreground: #192d4d; --walton-red: #cd2027; --walton-navy: #192d4d; --walton-teal: #1a998d; --walton-cyan: #c8eef5; }
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+    --background: #f4f8fa;
+    --foreground: #192d4d;
+    --walton-red: #cd2027;
+    --walton-navy: #192d4d;
+    --walton-teal: #1a998d;
+    --walton-cyan: #c8eef5;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-* { box-sizing: border-box; }
-::selection { background: #fecaca; color: #7f1d1d; }
-button, a, input, select { -webkit-tap-highlight-color: transparent; }
+* {
+    box-sizing: border-box;
+}
+
+::selection {
+    background: #fecaca;
+    color: #7f1d1d;
+}
+
+button, a, input, select {
+    -webkit-tap-highlight-color: transparent;
+}
 
 /* Keep the visual language close to Walton Plaza's cooler navy/teal palette. */
-.text-\[\#ec1c24\], .text-\[\#cd2027\] { color: #233f6c !important; }
-.bg-\[\#ec1c24\], .bg-\[\#cd2027\] { background-color: #233f6c !important; }
-.border-\[\#ec1c24\], .border-\[\#cd2027\] { border-color: #1a998d !important; }
-.hover\:text-\[\#ec1c24\]:hover, .hover\:text-\[\#cd2027\]:hover { color: #1a998d !important; }
-.hover\:bg-red-700:hover { background-color: #192d4d !important; }
-.bg-red-100 { background-color: #ddf0f4 !important; }
-.bg-red-50 { background-color: #e6f2fd !important; }
-.border-red-200 { border-color: #a8daff !important; }
-.text-red-600, .text-red-700 { color: #233f6c !important; }
-.shadow-red-200 { --tw-shadow-color: rgb(168 218 255 / 0.45) !important; }
+.text-\[\#ec1c24\], .text-\[\#cd2027\] {
+    color: #233f6c !important;
+}
+
+.bg-\[\#ec1c24\], .bg-\[\#cd2027\] {
+    background-color: #233f6c !important;
+}
+
+.border-\[\#ec1c24\], .border-\[\#cd2027\] {
+    border-color: #1a998d !important;
+}
+
+.hover\:text-\[\#ec1c24\]:hover, .hover\:text-\[\#cd2027\]:hover {
+    color: #1a998d !important;
+}
+
+.hover\:bg-red-700:hover {
+    background-color: #192d4d !important;
+}
+
+.bg-red-100 {
+    background-color: #ddf0f4 !important;
+}
+
+.bg-red-50 {
+    background-color: #e6f2fd !important;
+}
+
+.border-red-200 {
+    border-color: #a8daff !important;
+}
+
+.text-red-600, .text-red-700 {
+    color: #233f6c !important;
+}
+
+.shadow-red-200 {
+    --tw-shadow-color: rgb(168 218 255 / 0.45) !important;
+}
