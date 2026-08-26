@@ -1,0 +1,101 @@
+{
+  "info": {
+    "_postman_id": "8c1f0f2b-6d9b-4f52-9c47-walton-plaza-api",
+    "name": "Walton Plaza Product API",
+    "description": "Postman collection for testing the Walton Plaza getProducts GraphQL API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://devapi.waltonplaza.com.bd"
+    },
+    {
+      "key": "uid",
+      "value": "P-4TCF9V"
+    },
+    {
+      "key": "posItemCode",
+      "value": "25311"
+    },
+    {
+      "key": "skip",
+      "value": "0"
+    },
+    {
+      "key": "limit",
+      "value": "10"
+    }
+  ],
+  "item": [
+    {
+      "name": "Get Product Details",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Connection",
+            "value": "close"
+          },
+          {
+            "key": "User-Agent",
+            "value": "Mozilla/5.0"
+          },
+          {
+            "key": "Accept-Encoding",
+            "value": "gzip, deflate"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query GetProductDetails($uid: String, $posItemCode: String, $skip: Int!, $limit: Int!) { getProducts(pagination: { skip: $skip, limit: $limit }, filter: { uid: $uid, posItemCode: $posItemCode }) { message statusCode result { count products { uid enName images { url } productAttributes { enLabel values { enName } } detailedDescriptions { enLabel values { enName } } deliveries { enLabel values { enName } } serviceAndDeliveries { enLabel values { enName } } priceAndStocks { enLabel values { enName } } variants { mrpPrice ebsItemCode posItemCode quantity discount { amount value type } } } } } }\",\n  \"variables\": {\n    \"uid\": \"{{uid}}\",\n    \"posItemCode\": null,\n    \"skip\": {{skip}},\n    \"limit\": {{limit}}\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/graphql",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "graphql"
+          ]
+        },
+        "description": "Fetches product details using the UID variable. To search by POS item code instead, set uid to null and posItemCode to {{posItemCode}} in the request body."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('HTTP response is successful', function () {",
+              "    pm.expect(pm.response.code).to.be.within(200, 299);",
+              "});",
+              "",
+              "const json = pm.response.json();",
+              "pm.test('Response contains getProducts', function () {",
+              "    pm.expect(json.data).to.have.property('getProducts');",
+              "});",
+              "",
+              "pm.test('API statusCode is 200', function () {",
+              "    pm.expect(json.data.getProducts.statusCode).to.eql(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

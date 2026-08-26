@@ -1,0 +1,140 @@
+# Walton Plaza Frontend Developer Assignment Context
+
+## Project
+
+- Workspace: `product-detail-app`
+- Role: Frontend Developer
+- Employer/project: Walton Plaza
+- Submission deadline: **29/08/2026**
+- HR contact: Shoaib Muhummod, HRM Department, Walton Plaza; mobile `01608 983 192`.
+- The email's recipient address was not present in the supplied message; confirm it before sending.
+- Submission email subject: `Frontend Developer Project Submission – [Your Name]`
+
+## Source documents
+
+- `walton_frontend_evaluation.pdf` — evaluation requirements.
+- `waltonplaza-api-reference.docx` — GraphQL API reference.
+- `postman.json` — created Postman collection for API testing.
+
+## Evaluation requirements
+
+### Section 1: Architecture & Setup
+
+1. Set up Next.js App Router with TypeScript strict mode.
+2. Define a scalable folder structure.
+3. Configure a GraphQL client with caching.
+4. Create typed GraphQL queries.
+5. Add environment-based API configuration.
+
+### Section 2: Product Listing Page (PLP)
+
+6. Fetch products via GraphQL.
+7. Add pagination or infinite scroll and justify the choice.
+8. Add loading skeleton and error handling.
+9. Add filters for price, category, and availability.
+10. Add sorting by price and rating.
+
+### Section 3: Product Card
+
+11. Build a reusable `ProductCard` component with optimized images, a hover micro-interaction, and optimistic add-to-cart behavior.
+
+### Section 4: Product Details Page (PDP)
+
+12. Add dynamic routing.
+13. Fetch product details, including an image gallery, variant selection, stock-aware CTA, and dynamic pricing.
+
+### Section 5: State Management
+
+14. Implement cart add/remove/update operations.
+15. Persist cart state and explain the approach.
+
+### Section 6: Performance Optimization
+
+16. Explain and apply memoization strategy.
+17. Make appropriate server/client component decisions.
+18. Optimize GraphQL usage.
+
+### Section 7: React 19
+
+19. Use at least one modern React 19 feature.
+
+## Deliverables and evaluation
+
+- GitHub repository.
+- README documenting architecture decisions and trade-offs.
+- Main evaluation criteria: architecture quality, performance optimization, code quality, TypeScript usage, and decision-making ability.
+
+## Evaluation objective and required stack
+
+- Objective: design and implement a high-performance product listing and product detail system.
+- Required stack: Next.js App Router, React 19, TypeScript in strict mode, Tailwind CSS, and GraphQL using Apollo, urql, or a custom client.
+
+## API reference
+
+- GraphQL endpoint: `https://devapi.waltonplaza.com.bd/graphql` (HTTP `POST`)
+- In `postman.json`, the `baseUrl` variable is the domain `https://devapi.waltonplaza.com.bd`; the request appends `/graphql`.
+- HTTP method: `POST`
+- Header: `Content-Type: application/json`
+- Main query: `getProducts`
+- Pagination: `pagination: { skip: 0, limit: 10 }`
+- Product filters can use either `uid` or `posItemCode`.
+- The reference also documents `isActive: null | true | false`; `null` includes all products, while `true` returns active products only.
+- Example UID: `P-4TCF9V`
+- Example POS item code: `25311`
+- `getProducts` returns `message`, `statusCode`, and `result`; `result` contains `count` and `products`.
+- Pagination uses `skip` as the offset and `limit` as the number of records returned.
+- The complete detail query maps `productAttributes`, `detailedDescriptions`, `deliveries`, `serviceAndDeliveries`, and `priceAndStocks` to the corresponding information tabs/sections.
+- The JavaScript example sends a JSON body with a `query` string and reads the product from `data.getProducts.result.products[0]`.
+
+Important response fields:
+
+- `message`, `statusCode`
+- `result.count`, `result.products`
+- Product: `uid`, `enName`, `images { url }`
+- Basic information: `productAttributes { enLabel values { enName } }`
+- Detailed information: `detailedDescriptions { enLabel values { enName } }`
+- Terms and conditions: `deliveries { enLabel values { enName } }`
+- Warranty information: `serviceAndDeliveries { enLabel values { enName } }`
+- Special features: `priceAndStocks { enLabel values { enName } }`
+- Variants: `mrpPrice`, `ebsItemCode`, `posItemCode`, `quantity`, and `discount { amount value type }`
+
+API behavior to handle:
+
+- `statusCode === 200` means success; otherwise show `message` in an error state.
+- `discount === null`: use `mrpPrice` as the selling price with no discount display.
+- `discount.type === "flat"`: `sellingPrice = mrpPrice - discount.amount`.
+- `discount.type === "percentage"`: `sellingPrice = mrpPrice - (mrpPrice * discount.amount / 100)`.
+- `discount.value` should already equal the selling price and may be used directly for display.
+- `quantity === 0`: disable buying and show an out-of-stock state.
+- `images` may be empty; use a placeholder.
+- Information arrays may be null or empty; hide the tab or show a no-information message.
+- The documented API fields do not include category or rating fields, although the evaluation asks for category/availability filters and rating sorting. Confirm whether the live API exposes additional fields; otherwise document the limitation and implement only defensible client-side behavior.
+
+## Current project status
+
+- The workspace initially contained only the source PDF, API DOCX, and a minimal README; the Next.js scaffold has since been generated.
+- Current scaffold uses Next.js `16.3.3`, React/React DOM `19.2.8`, TypeScript, Tailwind CSS, and Apollo Client `4.2.12` (exact installed versions are recorded in `package.json` and `package-lock.json`).
+- Current source is still the default scaffold: `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/globals.css`, and the default `public` assets. No assignment features have been implemented yet.
+- `node_modules` and `.next` are present locally; they are generated artifacts and should not be treated as source deliverables.
+- A Postman v2.1 collection was created at `postman.json`.
+- The collection has variables: `baseUrl`, `uid`, `posItemCode`, `skip`, and `limit`.
+- Its default request fetches product details by UID `P-4TCF9V` and includes basic Postman tests for HTTP success, `getProducts`, and API `statusCode`.
+- The Postman request sets `posItemCode` to `null` while querying by UID. To query by POS item code, set `uid` to `null` and use the `posItemCode` variable in the request JSON.
+
+## Initial setup command already recommended
+
+Run from the project root in Command Prompt:
+
+```cmd
+npx create-next-app@latest . --ts --tailwind --eslint --app --src-dir --use-npm --import-alias "@/*" --yes && npm install @apollo/client graphql
+```
+
+This has already been run successfully in this workspace. It established the Next.js App Router, TypeScript, Tailwind, and Apollo Client foundation. Verify the generated package versions and repository state before making further changes.
+
+## Recommended implementation direction
+
+- Use Apollo Client with an `InMemoryCache`.
+- Keep data fetching in server components where practical, and isolate interactive filters, variants, cart actions, and tabs in client components.
+- Use GraphQL Code Generator or another typed-query approach rather than manually duplicating API types.
+- Configure the endpoint through an environment variable such as `NEXT_PUBLIC_GRAPHQL_URL`.
+- Add README architecture notes, trade-offs, API limitations, and setup/test instructions before submission.
