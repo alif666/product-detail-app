@@ -111,12 +111,19 @@ API behavior to handle:
 - The documented API fields do not include category or rating fields, although the evaluation asks for category/availability filters and rating sorting. Confirm whether the live API exposes additional fields; otherwise document the limitation and implement only defensible client-side behavior.
 - Verified live response for `P-4TCF9V`: HTTP 200, API status 200, message `SUCCESS`, count 1, product name `Safe Non-Inverter AC 1 Ton | SSN12AFB1-SLRG`, one CDN image, and one variant with MRP `51990`, quantity `493`, discount amount `5199`, discount value `10`, and type `PERCENTAGE`.
 - The live response contradicts the DOCX description of `discount.value`; calculate selling price from MRP and amount, and normalize discount type casing.
+- The live product response uses `discount.type: "PERCENTAGE"`, `amount: 5199`, and `value: 10` for MRP `51990`; do not assume `discount.value` is the final price.
 
 ## Current project status
 
 - The workspace initially contained only the source PDF, API DOCX, and a minimal README; the Next.js scaffold has since been generated.
 - Current scaffold uses Next.js `16.3.3`, React/React DOM `19.2.8`, TypeScript, Tailwind CSS, and Apollo Client `4.2.12` (exact installed versions are recorded in `package.json` and `package-lock.json`).
 - The assignment implementation is now present in `src/app`, `src/components`, and `src/lib`: PLP, PDP, Apollo data layer, typed models, pagination, filters, product cards, variant pricing, and cart persistence.
+- PLP implementation: server-rendered live product fetch, `skip`/`limit` pagination, search by name, brand-attribute filtering, stock availability filtering, price sorting, responsive cards, optimized remote images, discount badges, and loading/error/empty-safe rendering.
+- PDP implementation: dynamic `/products/[uid]` route, image gallery/fallback, variant selection, stock-aware CTA, normalized dynamic pricing, and tabs for basic, detailed, delivery, warranty, and special-feature information.
+- Cart implementation: React Context plus reducer, `useOptimistic` with `startTransition`, idempotent `hydrate` action, versioned `walton-cart:v1` localStorage persistence, legacy-key migration, drawer UI, quantity controls, remove, subtotal, clear confirmation, empty state, Escape/backdrop closing, and stock limits.
+- Cart drawer layout fix: moved the drawer outside the sticky blurred header and used viewport-based `h-dvh`, `min-h-0`, and independent scrolling so items no longer collapse behind the header.
+- Brand refinement: uppercase `WALTON PLAZA` header logo, navy W mark, navy/teal/cyan palette, blue primary actions, cooler hero/banner, refined cards, PDP accents, cart styling, and navy footer; no localization was added.
+- CSS compatibility fix: removed the unnecessary Tailwind `@theme inline` block from `src/app/globals.css` because generic CSS validators reported it as an unknown rule; Tailwind remains enabled through `@import "tailwindcss"`.
 - `node_modules` and `.next` are present locally; they are generated artifacts and should not be treated as source deliverables.
 - A Postman v2.1 collection was created at `postman.json`.
 - The collection has variables: `baseUrl`, `uid`, `posItemCode`, `skip`, and `limit`.
@@ -142,3 +149,13 @@ This has already been run successfully in this workspace. It established the Nex
 - Configure the endpoint through an environment variable such as `NEXT_PUBLIC_GRAPHQL_URL`.
 - Add README architecture notes, trade-offs, API limitations, and setup/test instructions before submission.
 - Current verification: `npm run lint`, `npx tsc --noEmit`, and `npm run build` all pass after implementation.
+
+## Git and change tracking
+
+- Repository branch at last context update: `ai-context-update`.
+- `HEAD`: `dfdae7d` (`fix- @theme issue`).
+- `HEAD` matches local `main`, `2-enhance-ui`, and their corresponding remote-tracking branches; there are no implementation commits ahead of or behind `main` at this snapshot.
+- `origin/1-integrate-get-product-detail-api` remains at `a161e58`, which is an ancestor of the current history.
+- Assignment implementation commit history, oldest to newest: `232f387` initial app implementation; `7e611dd` cart drawer and idempotent persistence; `a161e58` cart drawer viewport layout fix; `54ee3a7` Walton visual refinement; `dfdae7d` removal of the unknown Tailwind theme rule.
+- At this context update, tracked `AGENTS.md` and `context.md` contain the new context-maintenance documentation and are uncommitted; there are no uncommitted application-code changes. Untracked `.idea/` exists as local IDE metadata and is not assignment functionality.
+- Future context updates must record the current branch, HEAD commit, relationship to `main`, merge status, tracked/untracked status, and validation results. Never describe work on another branch as merged until Git history confirms it.
