@@ -1,9 +1,12 @@
 "use client";
 import Link from "next/link";
 import {useCart} from "@/lib/cart";
+import { useState } from "react";
+import { CartDrawer } from "@/components/CartDrawer";
 
 export function Header() {
     const {count} = useCart();
+    const [cartOpen, setCartOpen] = useState(false);
     return <header className="sticky top-0 z-20 border-b border-slate-200/80 bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 lg:px-8"><Link href="/"
                                                                                                      className="flex items-center gap-2"><span
@@ -13,9 +16,9 @@ export function Header() {
             <nav className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
                 <a href="#products" className="hover:text-[#ec1c24]">Shop
                     products</a><a href="#why-us" className="hover:text-[#ec1c24]">Why Walton</a></nav>
-            <button
+            <button onClick={() => setCartOpen(true)}
                 className="relative rounded-full bg-slate-100 px-4 py-2 text-sm font-bold text-slate-800 transition hover:bg-slate-200"
                 aria-label="Shopping cart">Cart <span className="ml-1 text-[#ec1c24]">({count})</span></button>
-        </div>
+        </div><CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </header>;
 }
