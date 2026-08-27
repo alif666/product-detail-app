@@ -353,3 +353,38 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - Added explicit Next server caching in `src/lib/data.ts` with `unstable_cache`: listing results use a 120-second revalidation and `walton-products` tag; detail results use a 60-second revalidation and `walton-product` tag. Cache wrappers store successful data only; API/network failures continue through the existing error states without caching transient failures.
 - Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 - Git snapshot before this context update: branch `10-enhance-page-performance`, `HEAD` `3323193`, aligned with local `main`, `origin/main`, `origin/10-enhance-page-performance`, and `origin/HEAD`; implementation changes are uncommitted in `src/app/page.tsx`, `src/components/LoadingSkeleton.tsx`, `src/lib/data.ts`, and `src/lib/queries.ts`. Existing `guideline.md` is also modified. Untracked `.idea/` and `issues/` remain local artifacts.
+
+## Latest validation update: deployed performance comparison
+
+- Re-tested `https://product-detail-app.vercel.app/` after deployment using streamed response timing and compared it with direct Walton GraphQL timing.
+- Before the performance changes, the deployed page took approximately 4.2–5.35 seconds to complete and returned about 302 KB. The direct full GraphQL request varied from approximately 2.17–4.49 seconds and returned about 135 KB.
+- After the changes, the deployed page returned its first streamed response chunk in approximately 883 ms and completed in approximately 897 ms during the measured run. Repeated complete-page runs were approximately 700 ms and 322 ms, with a response size of about 140 KB.
+- The direct Walton API remained slow/variable at approximately 2.5–3.2 seconds in the follow-up measurements, confirming that the API is still the external dependency while Suspense streaming and the smaller listing payload substantially improve browser-visible page delivery.
+- The deployed response still reports `X-Vercel-Cache: MISS` and `Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate` at the page level because the route remains dynamic; the application-level `unstable_cache` data cache is separate from that page header.
+- Current Git snapshot: branch `main`, `HEAD` `628c4bb`, aligned with `origin/main`, `origin/10-enhance-page-performance`, local `10-enhance-page-performance`, and `origin/HEAD`; the performance implementation is committed. Only untracked `.idea/` remains as a local artifact.
+
+## Latest diagnostic update: local page-2 pagination delay
+
+- Confirmed `Pagination.tsx` generates `/?page=2` and `src/app/page.tsx` calculates the expected offset `(page - 1) * limit`, so the pagination link/offset logic is not the cause.
+- The local server's page-1 request returned product IDs, but the local page-2 request remained pending. A direct Walton GraphQL request using the same page-2 parameters (`skip: 12`, `limit: 12`, `isActive: true`) exceeded a 20-second timeout.
+- Next.js development mode intentionally renders on demand and does not use the cache. A local production server also has an empty/local cache and can block on the first uncached page-2 API request. The deployed environment can appear to work because its data cache is warm and/or its Vercel network path differs.
+- This is an upstream Walton API latency/availability issue for the page-2 request, not a broken pagination URL. Restarting after a fresh production build and testing the direct API request can distinguish stale local build state from upstream delay.
+- Current Git snapshot before this context update: branch `11-pagination-is-not-working-properly`, `HEAD` `628c4bb`, aligned with local `main`, `origin/main`, `origin/10-enhance-page-performance`, `origin/11-pagination-is-not-working-properly`, and `origin/HEAD`; only `context.md` is modified and `.idea/` remains untracked.
+
+## Latest implementation update: remove Next server caching
+
+- Removed the `unstable_cache` wrappers, cache tags, and revalidation periods from `src/lib/data.ts`. Product listing and product-detail data now use the existing direct Apollo requests and preserve the existing response-status and error handling.
+- Retained the Suspense page-shell streaming implementation and `ProductSectionSkeleton` in `src/app/page.tsx` and `src/components/LoadingSkeleton.tsx`.
+- Retained the lightweight listing GraphQL selection in `src/lib/queries.ts`; detail pages still use the full product query.
+- Apollo's existing per-client `fetchPolicy: "cache-first"` remains unchanged. There is no longer an application-level Next.js cross-request data cache, so fresh server requests may call Walton's API again.
+- Existing pagination, page-size options, UID search, filters, sorting, product detail rendering, variant selection, discount handling, stock handling, and cart persistence were not intentionally changed.
+- Validation passed after the rollback: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+- Git snapshot after this update: branch `main`, `HEAD` `628c4bb`, aligned with `origin/main`, `origin/10-enhance-page-performance`, `origin/11-pagination-is-not-working-properly`, and `origin/HEAD`. The cache removal is currently uncommitted in `src/lib/data.ts`; `context.md` is also modified; untracked `.idea/` remains a local artifact. Commit `628c4bb` is a normal commit, not a merge commit, so no history-level merge revert was performed.
+
+## Latest diagnostic update: Walton GraphQL service connectivity
+
+- Tested `https://devapi.waltonplaza.com.bd/graphql` directly with a minimal POST query for one active product over HTTPS/TLS 1.2 and HTTP/1.1.
+- The connection was established and the request body was sent, but the remote server repeatedly requested TLS renegotiation and then closed the connection before returning an HTTP status or GraphQL response (`curl` exit 56: server closed abruptly / missing `close_notify`).
+- Tested `https://waltonplaza.com.bd/bn` separately; the public site returned HTTP 200. This indicates the public website is reachable, while the development GraphQL API is currently unavailable or rejecting this client connection. It is not evidence that the frontend pagination logic is broken.
+- Check timestamp context: this diagnostic was performed on 2026-08-28 in the configured Asia/Dhaka environment. Re-test later or through Walton's intended network/VPN/API access if the API team reports the service is healthy.
+- Git snapshot before this context update: branch `main`, `HEAD` `628c4bb`, aligned with `origin/main`; existing uncommitted changes remain `context.md` and `src/lib/data.ts`, with untracked `.idea/`.
