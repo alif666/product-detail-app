@@ -257,3 +257,20 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - Flat discount price calculation and cart subtotal calculation are unchanged; this change only corrects the customer-facing badge text and avoids deriving a misleading percentage for flat discounts.
 - Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 - Git snapshot after this implementation: branch `Flat-discount-badge-should-show-Save-X-tk-instead-of-percentage`, `HEAD` `21159dc`, aligned with local `main`, `origin/main`, and the feature branch remote. The badge changes are currently uncommitted in `src/lib/types.ts`, `src/components/ProductCard.tsx`, and `src/components/ProductDetails.tsx`; no merge is required for these pointers because `HEAD` is already aligned with `main`, but the working-tree changes must still be committed before handoff.
+
+## Latest implementation update: supplied Walton SVG logo
+
+- Replaced the text-built header logo with the supplied Walton Plaza SVG as the reusable `WaltonLogo` component in `src/components/Icons.tsx`.
+- `Header` now renders the SVG inside the existing home link with `aria-label="Walton Plaza home"`; responsive sizing is preserved (`170px` on smaller screens and `216px` from the `sm` breakpoint). Cart, navigation, and route behavior are unchanged.
+- Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+- Git snapshot after this implementation: branch `main`, `HEAD` `e2054ae`, aligned with `origin/main`; the logo changes are currently uncommitted in `src/components/Header.tsx` and `src/components/Icons.tsx`. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: header background color
+
+- Updated the sticky top header background from translucent white to the requested `#ddf0f4` color in `src/components/Header.tsx`. The SVG logo, navigation, cart, sticky positioning, and all other page colors remain unchanged.
+- Git snapshot before this update: branch `main`, `HEAD` `e2054ae`, aligned with `origin/main`; the header color change is uncommitted in `src/components/Header.tsx`. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: page background color
+
+- Changed the global `--background` color in `src/app/globals.css` to `#f5f5f5`, so the entire page body uses the requested light-gray background. Component-specific surfaces such as the header, cards, hero, cart drawer, and footer remain unchanged.
+- Git snapshot before this update: branch `main`, `HEAD` `e2054ae`, aligned with `origin/main`; the page background change is uncommitted in `src/app/globals.css`. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` remain local artifacts.
