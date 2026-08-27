@@ -32,16 +32,18 @@ export function sellingPrice(variant: Variant | null | undefined): number {
   if (!variant) return 0;
   const mrp = variant.mrpPrice ?? 0;
   const discount = variant.discount;
-  if (!discount || discount.amount == null) return mrp;
-  return discount.type?.toLowerCase() === "percentage"
-    ? mrp - (mrp * discount.amount) / 100
-    : mrp - discount.amount;
+  if (!discount) return mrp;
+  if (discount.type?.toLowerCase() === "percentage") {
+    const percentage = discount.value ?? 0;
+    return mrp - (mrp * percentage) / 100;
+  }
+  return discount.amount == null ? mrp : mrp - discount.amount;
 }
 
 export function discountPercent(variant: Variant | null | undefined): number | null {
   const discount = variant?.discount;
   if (!discount) return null;
-  if (discount.type?.toLowerCase() === "percentage") return discount.amount;
+  if (discount.type?.toLowerCase() === "percentage") return discount.value;
   const mrp = variant.mrpPrice ?? 0;
   return mrp > 0 && discount.amount != null ? (discount.amount / mrp) * 100 : null;
 }

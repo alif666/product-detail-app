@@ -110,8 +110,8 @@ API behavior to handle:
 - Information arrays may be null or empty; hide the tab or show a no-information message.
 - The documented API fields do not include category or rating fields, although the evaluation asks for category/availability filters and rating sorting. Confirm whether the live API exposes additional fields; otherwise document the limitation and implement only defensible client-side behavior.
 - Verified live response for `P-4TCF9V`: HTTP 200, API status 200, message `SUCCESS`, count 1, product name `Safe Non-Inverter AC 1 Ton | SSN12AFB1-SLRG`, one CDN image, and one variant with MRP `51990`, quantity `493`, discount amount `5199`, discount value `10`, and type `PERCENTAGE`.
-- The live response contradicts the DOCX description of `discount.value`; calculate selling price from MRP and amount, and normalize discount type casing.
-- The live product response uses `discount.type: "PERCENTAGE"`, `amount: 5199`, and `value: 10` for MRP `51990`; do not assume `discount.value` is the final price.
+- The live response contradicts the DOCX description of `discount.value`; for `PERCENTAGE`, use `discount.value` as the percentage and normalize type casing. For flat discounts, use `discount.amount` as the BDT deduction.
+- The live product response uses `discount.type: "PERCENTAGE"`, `amount: 5199`, and `value: 10` for MRP `51990`; the correct displayed selling price is `46791` and the discount badge is `10% OFF`.
 
 ## Current project status
 
@@ -151,14 +151,15 @@ This has already been run successfully in this workspace. It established the Nex
 - Configure the endpoint through an environment variable such as `NEXT_PUBLIC_GRAPHQL_URL`.
 - Add README architecture notes, trade-offs, API limitations, and setup/test instructions before submission.
 - Current verification: `npm run lint`, `npx tsc --noEmit`, and `npm run build` all pass after implementation.
+- Pricing correction: `src/lib/types.ts` now calculates percentage selling prices from `discount.value` and displays that same value in the percentage badge, preventing negative/million-scale prices such as `-2,069,090` and `4599% OFF`.
 
 ## Git and change tracking
 
-- Repository branch at last context update: `ai-context-update`.
-- `HEAD`: `dfdae7d` (`fix- @theme issue`).
-- `HEAD` matches local `main`, `2-enhance-ui`, and their corresponding remote-tracking branches; there are no implementation commits ahead of or behind `main` at this snapshot.
+- Repository branch at last context update: `116-not-getting-product-price-amount-correctly`.
+- `HEAD`: `64d997b` (`feat-postman get all products request updated`).
+- `HEAD` matches local `main`, `getProducts-postman-request-add`, and their corresponding remote-tracking branches; there are no committed changes ahead of or behind `main` at this snapshot.
 - `origin/1-integrate-get-product-detail-api` remains at `a161e58`, which is an ancestor of the current history.
 - Assignment implementation commit history, oldest to newest: `232f387` initial app implementation; `7e611dd` cart drawer and idempotent persistence; `a161e58` cart drawer viewport layout fix; `54ee3a7` Walton visual refinement; `dfdae7d` removal of the unknown Tailwind theme rule.
-- At this context update, tracked `AGENTS.md` and `context.md` contain the new context-maintenance documentation and are uncommitted; there are no uncommitted application-code changes. Untracked `.idea/` exists as local IDE metadata and is not assignment functionality.
+- At this context update, tracked `README.md`, `context.md`, and `src/lib/types.ts` contain the uncommitted pricing correction/documentation changes. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` are local workspace artifacts and are not assignment features.
 - Future context updates must record the current branch, HEAD commit, relationship to `main`, merge status, tracked/untracked status, and validation results. Never describe work on another branch as merged until Git history confirms it.
-- Latest Git snapshot after the Postman change: branch `getProducts-postman-request-add`, HEAD `3d5f1ca` (`fix-agent file updated`), with `postman.json` modified but uncommitted. HEAD is ahead of `main` at `dfdae7d` and this branch is not merged into `main`; untracked `.idea/` and `~$ltonplaza-api-reference.docx` are local workspace artifacts and not assignment features.
+- Latest Git snapshot after the pricing correction: branch `116-not-getting-product-price-amount-correctly`, HEAD `64d997b`, matching `main`; the pricing correction in `src/lib/types.ts` and related `README.md`/`context.md` updates are uncommitted. The branch is not ahead of or behind `main`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local workspace artifacts.

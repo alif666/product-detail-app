@@ -46,7 +46,7 @@ Open `http://localhost:3000`. The product listing uses the live API and product 
 
 ## Pricing note
 
-The reference document says `discount.value` is the final selling price and describes lowercase discount types. The verified live response for `P-4TCF9V` returned `type: "PERCENTAGE"`, `amount: 5199`, and `value: 10` for an MRP of `51990`. The app therefore normalizes the type case and calculates the final price from `mrpPrice` and `discount.amount`.
+The reference document says `discount.value` is the final selling price, but the verified live response for `P-4TCF9V` returned `type: "PERCENTAGE"`, `amount: 5199`, and `value: 10` for an MRP of `51990`. The app normalizes the type case, uses `discount.value` as the percentage for percentage discounts, and uses `discount.amount` as the BDT deduction for flat discounts.
 
 ## Verification
 
