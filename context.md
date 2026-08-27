@@ -112,6 +112,7 @@ API behavior to handle:
 - Verified live response for `P-4TCF9V`: HTTP 200, API status 200, message `SUCCESS`, count 1, product name `Safe Non-Inverter AC 1 Ton | SSN12AFB1-SLRG`, one CDN image, and one variant with MRP `51990`, quantity `493`, discount amount `5199`, discount value `10`, and type `PERCENTAGE`.
 - The live response contradicts the DOCX description of `discount.value`; for `PERCENTAGE`, use `discount.value` as the percentage and normalize type casing. For flat discounts, use `discount.amount` as the BDT deduction.
 - The live product response uses `discount.type: "PERCENTAGE"`, `amount: 5199`, and `value: 10` for MRP `51990`; the correct displayed selling price is `46791` and the discount badge is `10% OFF`.
+- Product detail API values may contain literal HTML such as `<p>`, `<ul>`, and `<li>`; these must be rendered as sanitized rich text, not displayed as escaped tag text.
 
 ## Current project status
 
@@ -124,6 +125,7 @@ API behavior to handle:
 - Cart drawer layout fix: moved the drawer outside the sticky blurred header and used viewport-based `h-dvh`, `min-h-0`, and independent scrolling so items no longer collapse behind the header.
 - Brand refinement: uppercase `WALTON PLAZA` header logo, navy W mark, navy/teal/cyan palette, blue primary actions, cooler hero/banner, refined cards, PDP accents, cart styling, and navy footer; no localization was added.
 - CSS compatibility fix: removed the unnecessary Tailwind `@theme inline` block from `src/app/globals.css` because generic CSS validators reported it as an unknown rule; Tailwind remains enabled through `@import "tailwindcss"`.
+- HTML rendering fix: added `src/components/RichText.tsx` using `isomorphic-dompurify`; `ProductDetails` now sanitizes and renders approved formatting tags (`p`, `br`, `strong`, `b`, `em`, `i`, `ul`, `ol`, `li`, and safe links) with styled spacing. Block markup uses a valid `div` wrapper to avoid invalid HTML nesting. Unsafe scripts, event handlers, styles, and unsupported attributes are removed.
 - `node_modules` and `.next` are present locally; they are generated artifacts and should not be treated as source deliverables.
 - A Postman v2.1 collection was created at `postman.json`.
 - The collection has variables: `baseUrl`, `uid`, `posItemCode`, `skip`, and `limit`.
@@ -152,14 +154,15 @@ This has already been run successfully in this workspace. It established the Nex
 - Add README architecture notes, trade-offs, API limitations, and setup/test instructions before submission.
 - Current verification: `npm run lint`, `npx tsc --noEmit`, and `npm run build` all pass after implementation.
 - Pricing correction: `src/lib/types.ts` now calculates percentage selling prices from `discount.value` and displays that same value in the percentage badge, preventing negative/million-scale prices such as `-2,069,090` and `4599% OFF`.
+- HTML rich-text fix validation: `npm run lint`, `npx tsc --noEmit`, and `npm run build` pass after adding `isomorphic-dompurify` and the sanitized renderer.
 
 ## Git and change tracking
 
-- Repository branch at last context update: `116-not-getting-product-price-amount-correctly`.
-- `HEAD`: `64d997b` (`feat-postman get all products request updated`).
-- `HEAD` matches local `main`, `getProducts-postman-request-add`, and their corresponding remote-tracking branches; there are no committed changes ahead of or behind `main` at this snapshot.
+- Repository branch at last context update: `3-html-tags-showing-in-product-detail-page`.
+- `HEAD`: `61b163b` (`fix-Updated the pricing logic. Now for percentage discounts: percentage = discount.value selling price = mrpPrice - (mrpPrice × percentage / 100)`).
+- `HEAD` matches local `main` and the corresponding remote-tracking branches; there are no committed changes ahead of or behind `main` at this snapshot.
 - `origin/1-integrate-get-product-detail-api` remains at `a161e58`, which is an ancestor of the current history.
 - Assignment implementation commit history, oldest to newest: `232f387` initial app implementation; `7e611dd` cart drawer and idempotent persistence; `a161e58` cart drawer viewport layout fix; `54ee3a7` Walton visual refinement; `dfdae7d` removal of the unknown Tailwind theme rule.
 - At this context update, tracked `README.md`, `context.md`, and `src/lib/types.ts` contain the uncommitted pricing correction/documentation changes. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` are local workspace artifacts and are not assignment features.
 - Future context updates must record the current branch, HEAD commit, relationship to `main`, merge status, tracked/untracked status, and validation results. Never describe work on another branch as merged until Git history confirms it.
-- Latest Git snapshot after the pricing correction: branch `116-not-getting-product-price-amount-correctly`, HEAD `64d997b`, matching `main`; the pricing correction in `src/lib/types.ts` and related `README.md`/`context.md` updates are uncommitted. The branch is not ahead of or behind `main`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local workspace artifacts.
+- Latest Git snapshot after the HTML rich-text fix: branch `3-html-tags-showing-in-product-detail-page`, HEAD `61b163b`, matching `main`; `package.json`, `package-lock.json`, `src/app/globals.css`, `src/components/ProductDetails.tsx`, `src/components/RichText.tsx`, and this context update are uncommitted. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local workspace artifacts.

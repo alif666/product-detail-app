@@ -68,3 +68,37 @@ button, a, input, select {
 .shadow-red-200 {
     --tw-shadow-color: rgb(168 218 255 / 0.45) !important;
 }
+
+.rich-text {
+    display: block;
+}
+
+.rich-text p {
+    margin: 0 0 0.65rem;
+}
+
+.rich-text p:last-child {
+    margin-bottom: 0;
+}
+
+.rich-text ul, .rich-text ol {
+    margin: 0.5rem 0 0.75rem 1.25rem;
+}
+
+.rich-text ul {
+    list-style: disc;
+}
+
+.rich-text ol {
+    list-style: decimal;
+}
+
+.rich-text li {
+    margin: 0.2rem 0;
+}
+
+.rich-text a {
+    color: #233f6c;
+    text-decoration: underline;
+    font-weight: 600;
+}

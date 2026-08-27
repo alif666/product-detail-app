@@ -11,6 +11,7 @@
   "dependencies": {
     "@apollo/client": "^4.2.12",
     "graphql": "^16.14.2",
+    "isomorphic-dompurify": "^3.19.0",
     "next": "16.3.3",
     "react": "19.2.8",
     "react-dom": "19.2.8"

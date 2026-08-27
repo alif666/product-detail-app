@@ -5,13 +5,14 @@ import {useState} from "react";
 import {useCart} from "@/lib/cart";
 import {formatPrice} from "@/components/ProductCard";
 import {discountPercent, sellingPrice, type Product, type ProductAttribute} from "@/lib/types";
+import {RichText} from "@/components/RichText";
 
 function InfoList({items}: { items: ProductAttribute[] | null }) {
     const rows = (items ?? []).filter((i) => i.enLabel && i.values?.some((v) => v.enName));
     return rows.length ? <dl className="divide-y divide-slate-100">{rows.map((item) => <div key={item.enLabel}
                                                                                             className="grid gap-1 py-3 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.5fr)]">
         <dt className="text-xs font-bold uppercase tracking-wide text-slate-400">{item.enLabel}</dt>
-        <dd className="text-sm leading-6 text-slate-700">{item.values?.map((v) => v.enName).filter(Boolean).join(", ")}</dd>
+        <dd className="text-sm leading-6 text-slate-700"><div className="space-y-2">{item.values?.map((v, index) => v.enName ? <RichText key={`${item.enLabel}-${index}`} value={v.enName} /> : null)}</div></dd>
     </div>)}</dl> : <p className="py-5 text-sm text-slate-400">No information available.</p>;
 }
 
