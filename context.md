@@ -188,3 +188,65 @@ This has already been run successfully in this workspace. It established the Nex
 - The guide explicitly records three implementation nuances for accurate evaluation discussion: the API has no tested/documented rating field; the PLP category control uses the available Brand attribute and is page-scoped; and optimistic add-to-cart is implemented through the PDP CTA/shared cart, while the current `ProductCard` is a link without a separate card-level add button.
 - Validation after documentation work: `npm run lint`, `npx tsc --noEmit`, and `npm run build` all passed. The build reports dynamic routes `/` and `/products/[uid]` plus the static `/_not-found` route.
 - Git state verified before this update: branch `main`, `HEAD` `85e5b2d` (`updated context file`), aligned with `origin/main`; no merge/rebase in progress. Current uncommitted tracked change is `context.md`; current untracked files are `guideline.md`, `.idea/`, and `~$ltonplaza-api-reference.docx`. `.next` and `node_modules` remain generated artifacts.
+
+## Authoritative audit snapshot — 27/08/2026
+
+This section supersedes older Git-state statements above when they conflict with the current repository snapshot. It was written after inspecting the source tree, `README.md`, `guideline.md`, `AGENTS.md`, the Next.js 16 local documentation, and the complete Git graph.
+
+### Verified implementation and fixes
+
+- The app uses Next.js App Router 16.3.3, React 19.2.8, TypeScript strict mode, Tailwind CSS 4, Apollo Client 4.2.12, and the `@/*` → `src/*` alias.
+- `src/app/page.tsx` is a server-rendered PLP. It fetches active products through the Walton GraphQL API, validates `statusCode === 200`, handles API/network errors, supports URL-driven `page` and validated `limit` values (12/20/30), and renders numbered pagination with boundary-safe Previous/Next links.
+- `src/app/products/[uid]/page.tsx` is a dynamic server-rendered PDP. It supports UID lookup, image gallery selection, missing-image fallback, variants, stock-aware CTA, normalized pricing, information tabs, and not-found/error states.
+- `src/lib/apollo.ts`, `queries.ts`, `data.ts`, and `types.ts` provide the typed GraphQL boundary, shared fragment, environment endpoint override, request headers, Apollo `InMemoryCache`, `cache-first` reads, nullable API models, and centralized pricing helpers.
+- PLP controls are client-side and page-scoped: name search, available Brand-attribute filter (used as the category substitute), availability filter, and low/high MRP price sorting. The current page's result array is derived with `useMemo`.
+- `ProductCard` is reusable and uses `next/image`, responsive `sizes`, remote-image configuration, hover lift/image-scale interaction, discount/price/stock presentation, and a no-image fallback. It links to the PDP; it does not contain a separate card-level add-to-cart button.
+- Cart behavior is implemented by `src/lib/cart.tsx` and `CartDrawer.tsx`: add, merge-by-product-and-variant, remove, increment/decrement, clear confirmation, subtotal, empty state, Escape/backdrop close, stock caps, optimistic `useOptimistic` + `startTransition`, idempotent hydration, legacy-key migration, and versioned `walton-cart:v1` persistence.
+- Fixed issues include incorrect percentage pricing/badges (live API uses `discount.value` as the percentage), null discount handling, flat discount calculation, zero-stock CTA/cart limits, null/empty information arrays, empty image handling, HTML detail rendering (sanitized with DOMPurify), invalid Tailwind `@theme` CSS, cart drawer overlap/scroll collapse, cart icon sizing/alignment/mobile behavior, variant identification and preview details, and route-level loading feedback.
+- `RichText` permits only approved formatting tags and safe link attributes; scripts, event handlers, styles, and unsupported attributes are removed before rendering.
+- `postman.json` is a Postman v2.1 collection with UID/POS-item and all-products requests, variables, API/HTTP tests, and the Walton connection workaround. `guideline.md` documents architecture, flows, trade-offs, limitations, and interview/evaluation notes.
+
+### Evaluation against the assignment rubric
+
+| Requirement | Assessment | Evidence or limitation |
+|---|---|---|
+| App Router, strict TypeScript, scalable structure | Met | `src/app`, `src/components`, `src/lib`; strict `tsconfig.json` |
+| GraphQL client with caching, typed queries, env config | Met | Apollo `InMemoryCache`, typed response models, shared fragment, `NEXT_PUBLIC_GRAPHQL_URL` |
+| PLP fetch and pagination/infinite scroll | Met | Offset `skip`/`limit`, URL pagination, page-size selector; pagination chosen because the API exposes offsets |
+| Loading and error handling | Met | Route `loading.tsx` skeletons plus API status/network error states |
+| Price/category/availability filtering | Partial but honest | Availability and price are implemented; Brand is the category substitute because no category field is documented/tested, and filtering is current-page scoped |
+| Price/rating sorting | Partial | Price sorting is implemented; rating cannot be implemented without a rating field, so no data is fabricated |
+| Product card, optimized image, hover, optimistic add | Partial | Card/image/hover are met; optimistic add-to-cart is implemented on the PDP/shared cart, not as a card-level CTA |
+| PDP, gallery, variants, stock, dynamic pricing | Met | `/products/[uid]`, gallery/fallback, variant selection, stock CTA, centralized pricing |
+| Cart add/remove/update and persistence | Met | Context/reducer, drawer controls, localStorage v1 persistence and migration |
+| Memoization and server/client decisions | Met with room to refine | `useMemo`; server routes/data and client interactive boundaries are appropriate. No `React.memo`/`useCallback` is currently needed by measured evidence |
+| GraphQL optimization | Met for current scope | Shared fragment, field-limited list/detail queries, offset pagination, cache-first reads; no generated-code pipeline |
+| React 19 feature | Met | `useOptimistic` with `startTransition` |
+| README/deliverable documentation | Met | README plus `guideline.md`, Postman collection, and this context file |
+
+Overall evaluation: strong implementation for the requested stack and core product-flow criteria. The main scoring deductions are API-constrained category/rating behavior, page-scoped client filtering/sorting, and the missing ProductCard-level add button. Architecture, TypeScript, error/null handling, pricing correctness, PDP behavior, cart behavior, and documentation are otherwise in place. There are no automated unit/integration tests in the repository; validation currently relies on lint, TypeScript, production build, and documented API/Postman checks.
+
+### Current Git truth
+
+- At this audit: branch `8-Search-with-product-id-exact-search-in-product-listing`; `HEAD` is `89df5ff` (`context updated for review`).
+- Local `main`, current feature branch, `origin/main`, and `origin/8-Search-with-product-id-exact-search-in-product-listing` all point to `89df5ff`. The branch is therefore merged/aligned with `main`; do not describe any other branch as merged unless future Git pointers/history confirm it.
+- The prior feature branches listed in `git branch -avv` (`1-integrate-get-product-detail-api`, `116-not-getting-product-price-amount-correctly`, `2-enhance-ui`, `3-html-tags-showing-in-product-detail-page`, `4-add-numbered-pagination`, `5-need-a-visual-skeleton-preloader`, `6-add-records-per-page`, `7-add-meaningful-variant-information`, `ai-context-update`, and `getProducts-postman-request-add`) remain available as refs and their relevant commits are ancestors of current `main` unless a future graph says otherwise.
+- There is no merge, rebase, or cherry-pick in progress. The committed branch pointers are aligned, but the current working tree contains uncommitted exact-UID-search changes in `README.md`, `src/app/page.tsx`, `src/components/ProductGrid.tsx`, and `src/lib/data.ts`, plus this `context.md` update. These changes are not merged into `main` until committed and confirmed by Git history. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` are local artifacts; `.next/` and `node_modules/` are generated/installed state and are not feature deliverables.
+- Validation on this snapshot passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`. The build reports dynamic `/` and `/products/[uid]` routes and static `/_not-found`.
+- Final validation after reconciling the exact-UID-search working tree also passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build` (Next.js 16.3.3/Turbopack; dynamic `/` and `/products/[uid]`, static `/_not-found`).
+
+### Context maintenance contract for future sessions
+
+- `AGENTS.md` is the operating instruction: read this file before assignment changes and update it after every implementation, bug fix, design/dependency/configuration/test change, commit, merge, rebase, or branch switch.
+- Every update must preserve prior functionality notes, record new public interfaces/files/limitations and validation, then inspect `git status --short --branch`, `git branch -avv`, and `git log --oneline --decorate --graph` before updating the Git section.
+- Keep committed, uncommitted, and untracked work separate. Record branch/HEAD and ancestor or merge relationships from Git evidence only. If context cannot be updated, state that explicitly at handoff.
+
+## Latest implementation update: exact product-ID search
+
+- Exact product-ID search is now automatic after the complete UID length is entered. A UID matching `/^P-[A-Z0-9]+$/i` and the verified live-catalog length of 8 characters (for example `P-4TCF9V`) is normalized to uppercase and stored in the URL as `uid`; Enter remains supported as a fallback.
+- The server listing route uses the existing `getProduct(uid)` API query for UID searches, then renders the single returned product through the existing `ProductCard`. The card's existing link continues to open `/products/[uid]`, so detail-page and cart functionality are unchanged.
+- Normal product-name search remains a client-side filter for the currently loaded page. Existing brand/category, availability, price sorting, page-size, numbered pagination, loading skeleton, API error, and empty-state behavior remain intact.
+- Exact UID mode hides page-size and pagination controls because the API result is a single product. Clearing the UID or submitting a non-UID search returns to the normal listing route; the selected `limit` is preserved.
+- Live active-catalog verification found 1,966 UIDs, all with length 8; minimum and maximum lengths were both 8. Empty search input immediately removes the UID query and restores the normal paginated listing.
+- `README.md`, `src/app/page.tsx`, `src/components/ProductGrid.tsx`, and `src/lib/data.ts` are modified for this feature. Unknown exact UIDs now show `Product not found.` instead of incorrectly displaying a successful API message. Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+- Git snapshot after this implementation: branch `8-Search-with-product-id-exact-search-in-product-listing` at `89df5ff`, tracking `origin/8-Search-with-product-id-exact-search-in-product-listing`; `main` and `origin/main` also point to `89df5ff`. The exact-search changes are currently uncommitted on this branch and are not merged into `main`. Untracked local artifacts remain `.idea/` and `~$ltonplaza-api-reference.docx`; `.next` and `node_modules` are generated artifacts.

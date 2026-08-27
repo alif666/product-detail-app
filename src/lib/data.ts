@@ -27,8 +27,11 @@ export async function getProduct(uid: string): Promise<{ product?: Product; erro
       fetchPolicy: "cache-first",
     });
     const result = data?.getProducts;
-    if (!result || result.statusCode !== 200 || !result.result?.products[0]) {
+    if (!result || result.statusCode !== 200 || !result.result) {
       return { error: result?.message ?? "Product not found." };
+    }
+    if (!result.result.products[0]) {
+      return { error: "Product not found." };
     }
     return { product: result.result.products[0] };
   } catch {

@@ -39,6 +39,7 @@ Open `http://localhost:3000`. The product listing uses the live API and product 
 ## Product behavior
 
 - Pagination is used because the API explicitly provides offset pagination with `skip` and `limit`; it keeps the initial payload small.
+- Product-name search remains a responsive client-side filter for the loaded page. Once an 8-character UID such as `P-4TCF9V` is entered, the app automatically uses the API's `uid` filter and renders the single matching product card; the card keeps the existing navigation to the product detail page. Clearing the field restores the normal listing without changing cart behavior. Enter remains supported as a fallback for submitting/clearing the search.
 - The listing defaults to 12 products per page and provides 20 and 30 page-size options. The selected size is stored in the URL as `limit`, resets to page 1 when changed, and is preserved across numbered pagination links. The application caps the requested page size at 30 to match the API behavior.
 - Route-level loading skeletons provide immediate feedback during slow listing and detail API navigation, including page-size changes, pagination, opening products, and returning to the listing.
 - Product cards use `next/image`, responsive `sizes`, remote image configuration, lazy loading, a missing-image fallback, and hover feedback.
