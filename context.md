@@ -125,6 +125,7 @@ API behavior to handle:
 - Icon/layout correction: increased the header cart icon from `size-4` to `size-5` and changed the PLP section heading wrapper to a vertical flex layout so `Shop collection` and `Featured products` remain on separate lines.
 - Cart alignment correction: increased the header cart icon to `size-6`, added `shrink-0`, `whitespace-nowrap`, and `leading-none` so the icon, Cart label, and item count stay larger and aligned horizontally.
 - Mobile cart refinement: hides only the visible `Cart` label below the `sm` breakpoint; the larger cart icon and item count remain visible, while the button keeps its accessible `Shopping cart` label.
+- Heading icon refinement: removed icons from the `Shop collection` and `Featured products` PLP labels at the user's request; useful header, cart, hero, and pagination icons remain.
 - PDP implementation: dynamic `/products/[uid]` route, image gallery/fallback, variant selection, stock-aware CTA, normalized dynamic pricing, and tabs for basic, detailed, delivery, warranty, and special-feature information.
 - Cart implementation: React Context plus reducer, `useOptimistic` with `startTransition`, idempotent `hydrate` action, versioned `walton-cart:v1` localStorage persistence, legacy-key migration, drawer UI, quantity controls, remove, subtotal, clear confirmation, empty state, Escape/backdrop closing, and stock limits.
 - Cart drawer layout fix: moved the drawer outside the sticky blurred header and used viewport-based `h-dvh`, `min-h-0`, and independent scrolling so items no longer collapse behind the header.
@@ -157,7 +158,7 @@ This has already been run successfully in this workspace. It established the Nex
 - Use GraphQL Code Generator or another typed-query approach rather than manually duplicating API types.
 - Configure the endpoint through an environment variable such as `NEXT_PUBLIC_GRAPHQL_URL`.
 - Add README architecture notes, trade-offs, API limitations, and setup/test instructions before submission.
-- Current verification: `npm run lint` and `npx tsc --noEmit` pass after the mobile cart refinement. The last full build also passed after the preceding cart alignment correction.
+- Current verification: `npm run lint` and `npx tsc --noEmit` pass after removing the PLP heading icons. The last full build also passed after the preceding cart alignment correction.
 - Pricing correction: `src/lib/types.ts` now calculates percentage selling prices from `discount.value` and displays that same value in the percentage badge, preventing negative/million-scale prices such as `-2,069,090` and `4599% OFF`.
 - HTML rich-text fix validation: `npm run lint`, `npx tsc --noEmit`, and `npm run build` pass after adding `isomorphic-dompurify` and the sanitized renderer.
 
@@ -170,4 +171,4 @@ This has already been run successfully in this workspace. It established the Nex
 - Assignment implementation commit history, oldest to newest: `232f387` initial app implementation; `7e611dd` cart drawer and idempotent persistence; `a161e58` cart drawer viewport layout fix; `54ee3a7` Walton visual refinement; `dfdae7d` removal of the unknown Tailwind theme rule.
 - At this context update, `context.md`, `src/app/page.tsx`, `src/components/CartDrawer.tsx`, `src/components/Header.tsx`, and `src/components/Pagination.tsx` are modified but uncommitted for the icon/layout refinement. New tracked-in-scope file: `src/components/Icons.tsx`. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` are local workspace artifacts and are not assignment features.
 - Future context updates must record the current branch, HEAD commit, relationship to `main`, merge status, tracked/untracked status, and validation results. Never describe work on another branch as merged until Git history confirms it.
-- Latest Git snapshot after mobile cart refinement validation: branch `main`, HEAD `c5ad7ce`, matching `origin/main`; mobile cart changes and this context update are uncommitted. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` remain local workspace artifacts. `npm run lint` and `npx tsc --noEmit` completed successfully; the last full build also passed.
+- Latest Git snapshot after heading icon refinement validation: branch `main`, HEAD `cc5d1ac` (`icons added for better UI experience`), matching `origin/main`; `src/app/page.tsx` and this context update are uncommitted. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` remain local workspace artifacts. `npm run lint` and `npx tsc --noEmit` completed successfully; the last full build also passed.

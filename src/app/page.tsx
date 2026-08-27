@@ -2,7 +2,7 @@ import {Header} from "@/components/Header";
 import {Pagination} from "@/components/Pagination";
 import {ProductGrid} from "@/components/ProductGrid";
 import {getProducts} from "@/lib/data";
-import {PackageIcon, SparklesIcon} from "@/components/Icons";
+import {SparklesIcon} from "@/components/Icons";
 
 type Props = { searchParams: Promise<{ page?: string }> };
 export default async function Home({searchParams}: Props) {
@@ -31,8 +31,8 @@ export default async function Home({searchParams}: Props) {
                 </div>
             </section>
             <div id="products" className="mb-6 flex items-end justify-between">
-                <div className="flex flex-col items-start"><p className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#1a998d]"><PackageIcon className="size-4"/>Shop collection</p><h2
-                    className="mt-1 inline-flex items-center gap-2 text-3xl font-black text-[#192d4d]"><SparklesIcon className="size-6 text-[#1a998d]"/>Featured products</h2></div>
+                <div className="flex flex-col items-start"><p className="text-sm font-bold uppercase tracking-widest text-[#1a998d]">Shop collection</p><h2
+                    className="mt-1 text-3xl font-black text-[#192d4d]">Featured products</h2></div>
                 <span className="hidden text-sm text-slate-500 sm:block">{data.count.toLocaleString()} products available</span>
             </div>
             {data.error ?
