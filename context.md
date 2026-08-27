@@ -120,6 +120,7 @@ API behavior to handle:
 - Current scaffold uses Next.js `16.3.3`, React/React DOM `19.2.8`, TypeScript, Tailwind CSS, and Apollo Client `4.2.12` (exact installed versions are recorded in `package.json` and `package-lock.json`).
 - The assignment implementation is now present in `src/app`, `src/components`, and `src/lib`: PLP, PDP, Apollo data layer, typed models, pagination, filters, product cards, variant pricing, and cart persistence.
 - PLP implementation: server-rendered live product fetch, `skip`/`limit` pagination, search by name, brand-attribute filtering, stock availability filtering, price sorting, responsive cards, optimized remote images, discount badges, and loading/error/empty-safe rendering.
+- Numbered pagination: the PLP keeps the existing 12-item API page size and offset calculation, exposes numbered page links using `/?page=N`, highlights the current page, disables Previous/Next at the boundaries, and uses accessible ellipses for larger page ranges.
 - PDP implementation: dynamic `/products/[uid]` route, image gallery/fallback, variant selection, stock-aware CTA, normalized dynamic pricing, and tabs for basic, detailed, delivery, warranty, and special-feature information.
 - Cart implementation: React Context plus reducer, `useOptimistic` with `startTransition`, idempotent `hydrate` action, versioned `walton-cart:v1` localStorage persistence, legacy-key migration, drawer UI, quantity controls, remove, subtotal, clear confirmation, empty state, Escape/backdrop closing, and stock limits.
 - Cart drawer layout fix: moved the drawer outside the sticky blurred header and used viewport-based `h-dvh`, `min-h-0`, and independent scrolling so items no longer collapse behind the header.
@@ -152,17 +153,17 @@ This has already been run successfully in this workspace. It established the Nex
 - Use GraphQL Code Generator or another typed-query approach rather than manually duplicating API types.
 - Configure the endpoint through an environment variable such as `NEXT_PUBLIC_GRAPHQL_URL`.
 - Add README architecture notes, trade-offs, API limitations, and setup/test instructions before submission.
-- Current verification: `npm run lint`, `npx tsc --noEmit`, and `npm run build` all pass after implementation.
+- Current verification: `npm run lint`, `npx tsc --noEmit`, and `npm run build` all pass after the numbered pagination implementation.
 - Pricing correction: `src/lib/types.ts` now calculates percentage selling prices from `discount.value` and displays that same value in the percentage badge, preventing negative/million-scale prices such as `-2,069,090` and `4599% OFF`.
 - HTML rich-text fix validation: `npm run lint`, `npx tsc --noEmit`, and `npm run build` pass after adding `isomorphic-dompurify` and the sanitized renderer.
 
 ## Git and change tracking
 
-- Repository branch at last context update: `3-html-tags-showing-in-product-detail-page`.
-- `HEAD`: `61b163b` (`fix-Updated the pricing logic. Now for percentage discounts: percentage = discount.value selling price = mrpPrice - (mrpPrice × percentage / 100)`).
-- `HEAD` matches local `main` and the corresponding remote-tracking branches; there are no committed changes ahead of or behind `main` at this snapshot.
+- Repository branch at last context update: `4-add-numbered-pagination`.
+- `HEAD`: `c33d9ae` (`Added sanitized rich-text rendering with isomorphic-dompurify`).
+- `HEAD` matches local `main`, `origin/main`, and `origin/4-add-numbered-pagination`; the numbered pagination change is currently uncommitted on this branch and has not been merged as a separate commit.
 - `origin/1-integrate-get-product-detail-api` remains at `a161e58`, which is an ancestor of the current history.
 - Assignment implementation commit history, oldest to newest: `232f387` initial app implementation; `7e611dd` cart drawer and idempotent persistence; `a161e58` cart drawer viewport layout fix; `54ee3a7` Walton visual refinement; `dfdae7d` removal of the unknown Tailwind theme rule.
-- At this context update, tracked `README.md`, `context.md`, and `src/lib/types.ts` contain the uncommitted pricing correction/documentation changes. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` are local workspace artifacts and are not assignment features.
+- At this context update, `src/components/Pagination.tsx` is modified but uncommitted for the numbered pagination feature. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` are local workspace artifacts and are not assignment features; no untracked assignment source files are present.
 - Future context updates must record the current branch, HEAD commit, relationship to `main`, merge status, tracked/untracked status, and validation results. Never describe work on another branch as merged until Git history confirms it.
-- Latest Git snapshot after the HTML rich-text fix: branch `3-html-tags-showing-in-product-detail-page`, HEAD `61b163b`, matching `main`; `package.json`, `package-lock.json`, `src/app/globals.css`, `src/components/ProductDetails.tsx`, `src/components/RichText.tsx`, and this context update are uncommitted. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local workspace artifacts.
+- Latest Git snapshot after numbered pagination validation: branch `4-add-numbered-pagination`, HEAD `c33d9ae`, matching `main`; only `src/components/Pagination.tsx` and this context update are uncommitted. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` remain local workspace artifacts. `npm run lint`, `npx tsc --noEmit`, and `npm run build` completed successfully.
