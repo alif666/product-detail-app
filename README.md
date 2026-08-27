@@ -40,6 +40,7 @@ Open `http://localhost:3000`. The product listing uses the live API and product 
 
 - Pagination is used because the API explicitly provides offset pagination with `skip` and `limit`; it keeps the initial payload small.
 - The listing defaults to 12 products per page and provides 20 and 30 page-size options. The selected size is stored in the URL as `limit`, resets to page 1 when changed, and is preserved across numbered pagination links. The application caps the requested page size at 30 to match the API behavior.
+- Route-level loading skeletons provide immediate feedback during slow listing and detail API navigation, including page-size changes, pagination, opening products, and returning to the listing.
 - Product cards use `next/image`, responsive `sizes`, remote image configuration, lazy loading, a missing-image fallback, and hover feedback.
 - The live API exposes brand-like attributes, so the listing's category control uses available brand attributes. Rating is not present in the documented or tested live response, so no rating data is fabricated.
 - API arrays may be null or empty and are rendered safely. Products with zero quantity cannot be added to the cart.
