@@ -39,6 +39,24 @@ export function ProductListingSkeleton() {
     </div>;
 }
 
+export function ProductSectionSkeleton() {
+    return <div role="status" aria-label="Loading products" className="min-h-[32rem]">
+        <div className="mb-6 flex justify-end">
+            <SkeletonBlock className="h-9 w-36"/>
+        </div>
+        <div className="mb-7 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
+            <SkeletonBlock className="h-11"/>
+            <SkeletonBlock className="h-11"/>
+            <SkeletonBlock className="h-11"/>
+            <SkeletonBlock className="h-11"/>
+        </div>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {Array.from({length: 12}, (_, index) => <ProductCardSkeleton key={index}/>)}
+        </div>
+        <span className="sr-only">Loading products...</span>
+    </div>;
+}
+
 export function ProductDetailSkeleton() {
     return <div role="status" aria-label="Loading product details" className="min-h-screen bg-[#f6f9fb]">
         <SkeletonHeader/>

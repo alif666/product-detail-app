@@ -494,3 +494,45 @@ Keep `waltonplaza-api-reference.docx`, `walton_frontend_evaluation.pdf`, and `po
   npx tsc --noEmit
 
   This currently passes in the project.
+  
+# Page Performance Issue Fix 
+
+### 1. Stream the page shell
+
+Render the header, hero, and page structure immediately. Put the API-dependent product section inside Suspense.
+
+This allows users to see the page and skeleton immediately while products load.
+
+### 2. Use a smaller listing query
+
+The listing page currently requests detail-only fields such as:
+
+detailedDescriptions
+deliveries
+serviceAndDeliveries
+priceAndStocks
+
+The listing query should request only:
+
+uid
+enName
+images
+productAttributes
+variants
+
+Keep the full fields only for the product detail page.
+
+### 3. Add explicit server caching
+
+The response currently says:
+
+X-Vercel-Cache: MISS
+Cache-Control: no-store
+
+Add controlled Next.js server caching, preferably around the product data request, with a short revalidation period such as 60–300 seconds.
+
+That prevents every visitor from calling Walton’s API independently.
+
+
+Implement  these without  breaking any current functionality. 
+

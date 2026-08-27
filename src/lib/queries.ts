@@ -1,5 +1,18 @@
 import { gql } from "@apollo/client";
 
+export const PRODUCT_CARD_FIELDS = gql`
+  fragment ProductCardFields on Product {
+    uid
+    enName
+    images { url }
+    productAttributes { enLabel values { enName } }
+    variants {
+      mrpPrice ebsItemCode posItemCode quantity
+      discount { amount value type }
+    }
+  }
+`;
+
 export const PRODUCT_FIELDS = gql`
   fragment ProductFields on Product {
     uid
@@ -24,10 +37,10 @@ export const PRODUCTS_QUERY = gql`
       filter: { isActive: $isActive }
     ) {
       message statusCode
-      result { count products { ...ProductFields } }
+      result { count products { ...ProductCardFields } }
     }
   }
-  ${PRODUCT_FIELDS}
+  ${PRODUCT_CARD_FIELDS}
 `;
 
 export const PRODUCT_QUERY = gql`

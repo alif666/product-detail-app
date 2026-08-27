@@ -1,13 +1,17 @@
+import {Suspense} from "react";
 import {Header} from "@/components/Header";
 import {Pagination} from "@/components/Pagination";
 import {ProductGrid} from "@/components/ProductGrid";
 import {getProduct, getProducts} from "@/lib/data";
 import {SparklesIcon} from "@/components/Icons";
 import {PageSizeSelect} from "@/components/PageSizeSelect";
+import {ProductSectionSkeleton} from "@/components/LoadingSkeleton";
 import {DEFAULT_PAGE_SIZE, normalizePageSize} from "@/lib/pagination";
 
-type Props = { searchParams: Promise<{ page?: string; limit?: string; uid?: string }> };
-export default async function Home({searchParams}: Props) {
+type SearchParams = Promise<{ page?: string; limit?: string; uid?: string }>;
+type Props = { searchParams: SearchParams };
+
+async function ProductListingSection({searchParams}: { searchParams: SearchParams }) {
     const params = await searchParams;
     const uid = params.uid?.trim();
     const page = Math.max(1, Number(params.page) || 1);
@@ -16,6 +20,21 @@ export default async function Home({searchParams}: Props) {
         ? await getProduct(uid).then((result) => ({products: result.product ? [result.product] : [], count: result.product ? 1 : 0, error: result.error}))
         : await getProducts((page - 1) * limit, limit);
     const totalPages = Math.max(1, Math.ceil(data.count / limit));
+    return <>
+        <div className="mb-6 flex min-h-9 items-center justify-end gap-4">
+            {!uid && <PageSizeSelect value={limit}/>} 
+            <span className="hidden text-sm text-slate-500 lg:block">{data.count.toLocaleString()} products available</span>
+        </div>
+        {data.error ?
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">{data.error}</div> :
+            <>
+                <ProductGrid key={uid ?? "listing"} products={data.products} initialSearch={uid ?? ""}/>
+                {!uid && <Pagination page={page} totalPages={totalPages} limit={limit}/>} 
+            </>}
+    </>;
+}
+
+export default function Home({searchParams}: Props) {
     return <><Header/>
         <main className="mx-auto w-full max-w-7xl flex-1 px-5 py-12 lg:px-8">
             <section
@@ -35,19 +54,15 @@ export default async function Home({searchParams}: Props) {
                         className="mt-4 text-sm font-bold text-slate-500">Comfort for every home</p></div>
                 </div>
             </section>
-            <div id="products" className="mb-6 flex items-end justify-between gap-4">
-                <div className="flex flex-col items-start"><p className="text-sm font-bold uppercase tracking-widest text-[#1a998d]">Shop collection</p><h2
-                    className="mt-1 text-3xl font-black text-[#192d4d]">Featured products</h2></div>
-                <div className="flex shrink-0 items-center gap-4">{!uid && <PageSizeSelect value={limit}/>} 
-                    <span className="hidden text-sm text-slate-500 lg:block">{data.count.toLocaleString()} products available</span>
+            <section id="products">
+                <div className="mb-6 flex items-end justify-between gap-4">
+                    <div className="flex flex-col items-start"><p className="text-sm font-bold uppercase tracking-widest text-[#1a998d]">Shop collection</p><h2
+                        className="mt-1 text-3xl font-black text-[#192d4d]">Featured products</h2></div>
                 </div>
-            </div>
-            {data.error ?
-                <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">{data.error}</div> :
-                <>
-                    <ProductGrid key={uid ?? "listing"} products={data.products} initialSearch={uid ?? ""}/>{!uid && <Pagination page={page} totalPages={totalPages} limit={limit}/>} 
-                </>
-            }
+                <Suspense fallback={<ProductSectionSkeleton/>}>
+                    <ProductListingSection searchParams={searchParams}/>
+                </Suspense>
+            </section>
         </main>
         <footer id="why-us"
                 className="border-t border-[#233f6c] bg-[#192d4d] px-5 py-10 text-center text-sm text-slate-300">Walton
