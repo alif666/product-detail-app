@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type {Product} from "@/lib/types";
-import {discountPercent, sellingPrice} from "@/lib/types";
+import {discountInfo, sellingPrice} from "@/lib/types";
 
 export function formatPrice(value: number) {
     return `৳${Math.round(value).toLocaleString("en-BD")}`;
@@ -11,7 +11,7 @@ export function ProductCard({product}: { product: Product }) {
     const variant = product.variants?.[0];
     const price = sellingPrice(variant);
     const oldPrice = variant?.mrpPrice ?? 0;
-    const discount = discountPercent(variant);
+    const discount = discountInfo(variant);
     const image = product.images?.[0]?.url;
     return <article
         className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#73c6d5] hover:shadow-xl">
@@ -22,7 +22,7 @@ export function ProductCard({product}: { product: Product }) {
                        className="object-contain p-5 transition duration-500 group-hover:scale-105"/> :
                 <div className="grid h-full place-items-center text-sm font-semibold text-slate-400">No
                     image</div>}{discount ? <span
-                className="absolute left-3 top-3 rounded-lg bg-[#cd2027] px-2.5 py-1 text-xs font-bold text-white">{Math.round(discount)}% OFF</span> : null}</div>
+                className="absolute left-3 top-3 rounded-lg bg-[#cd2027] px-2.5 py-1 text-xs font-bold text-white">{discount.type === "flat" ? `Save ${formatPrice(discount.value)}` : `${Math.round(discount.value)}% OFF`}</span> : null}</div>
             <div className="p-4"><p
                 className="mb-2 line-clamp-2 min-h-10 text-sm font-bold leading-5 text-[#192d4d]">{product.enName ?? "Walton product"}</p>
                 <div className="flex items-baseline gap-2"><strong

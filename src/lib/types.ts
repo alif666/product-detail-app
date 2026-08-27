@@ -28,6 +28,10 @@ export type ProductsResponse = {
   };
 };
 
+export type DiscountInfo =
+  | { type: "percentage"; value: number }
+  | { type: "flat"; value: number };
+
 export function sellingPrice(variant: Variant | null | undefined): number {
   if (!variant) return 0;
   const mrp = variant.mrpPrice ?? 0;
@@ -46,6 +50,19 @@ export function discountPercent(variant: Variant | null | undefined): number | n
   if (discount.type?.toLowerCase() === "percentage") return discount.value;
   const mrp = variant.mrpPrice ?? 0;
   return mrp > 0 && discount.amount != null ? (discount.amount / mrp) * 100 : null;
+}
+
+export function discountInfo(variant: Variant | null | undefined): DiscountInfo | null {
+  const discount = variant?.discount;
+  if (!discount) return null;
+  const type = discount.type?.toLowerCase();
+  if (type === "percentage" && discount.value != null && discount.value > 0) {
+    return {type: "percentage", value: discount.value};
+  }
+  if (type === "flat" && discount.amount != null && discount.amount > 0) {
+    return {type: "flat", value: discount.amount};
+  }
+  return null;
 }
 
 export function attributeValue(product: Product, label: string): string | undefined {
