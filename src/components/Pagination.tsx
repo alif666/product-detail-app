@@ -1,4 +1,5 @@
 import Link from "next/link";
+import {ChevronLeftIcon, ChevronRightIcon} from "@/components/Icons";
 
 type PageItem = number | "ellipsis-left" | "ellipsis-right";
 
@@ -22,7 +23,7 @@ export function Pagination({page, totalPages}: { page: number; totalPages: numbe
         <ul className="flex flex-wrap items-center justify-center gap-2">
             <li><Link aria-disabled={isFirstPage} tabIndex={isFirstPage ? -1 : undefined}
                       className={`inline-flex min-h-10 items-center rounded-xl border px-3 text-sm font-bold transition ${isFirstPage ? "pointer-events-none border-slate-200 bg-slate-50 text-slate-300" : "border-slate-200 bg-white text-[#233f6c] hover:border-[#233f6c] hover:bg-[#eef5ff]"}`}
-                      href={pageHref(Math.max(1, page - 1))}>Previous</Link></li>
+                      href={pageHref(Math.max(1, page - 1))}><ChevronLeftIcon className="mr-1 size-4"/>Previous</Link></li>
             {items.map((item) => {
                 if (typeof item !== "number") return <li key={item} aria-hidden="true" className="inline-flex min-h-10 min-w-10 items-center justify-center px-1 text-sm font-bold text-slate-400">…</li>;
                 const isCurrent = item === page;
@@ -32,7 +33,7 @@ export function Pagination({page, totalPages}: { page: number; totalPages: numbe
             })}
             <li><Link aria-disabled={isLastPage} tabIndex={isLastPage ? -1 : undefined}
                       className={`inline-flex min-h-10 items-center rounded-xl border px-3 text-sm font-bold transition ${isLastPage ? "pointer-events-none border-slate-200 bg-slate-50 text-slate-300" : "border-slate-200 bg-white text-[#233f6c] hover:border-[#233f6c] hover:bg-[#eef5ff]"}`}
-                      href={pageHref(Math.min(totalPages, page + 1))}>Next</Link></li>
+                      href={pageHref(Math.min(totalPages, page + 1))}>Next<ChevronRightIcon className="ml-1 size-4"/></Link></li>
         </ul>
     </nav>;
 }
