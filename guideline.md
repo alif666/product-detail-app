@@ -425,3 +425,72 @@ Keep `waltonplaza-api-reference.docx`, `walton_frontend_evaluation.pdf`, and `po
 
 “The app uses a server-rendered App Router shell and a small set of client boundaries for interactions. `page.tsx` and `[uid]/page.tsx` call a typed Apollo data adapter. The adapter checks Walton’s application-level `statusCode`, while the shared GraphQL fragment keeps list and detail fields consistent. The PLP uses the backend’s offset pagination and keeps URL state shareable. Product cards use `next/image` and hover feedback; the PDP handles gallery, API-backed variants, pricing, stock, and five information sections. Cart state is a reducer behind Context, persisted with a versioned localStorage key, and updated optimistically with React 19 `useOptimistic`. I documented the API limitations: there is no rating field, category is represented by the available Brand attribute, and a strict card-level add button would be the next small refinement.”
 
+# FAQ
+
+## What is typescript strict mode? and how is it being handled in this project
+• TypeScript strict mode enables stronger compile-time checks so unsafe or ambiguous code is rejected before runtime.
+
+  In this project, it is enabled in tsconfig.json:
+
+  {
+    "compilerOptions": {
+      "strict": true,
+      "noEmit": true
+    }
+  }
+
+  strict: true includes checks such as:
+
+  - strictNullChecks: prevents using null or undefined as valid values without checking.
+  - noImplicitAny: prevents variables and parameters from silently becoming any.
+  - strictFunctionTypes: validates function parameter types.
+  - strictPropertyInitialization: ensures class properties are initialized.
+  - useUnknownInCatchVariables: treats caught errors safely as unknown.
+
+  The project handles strict mode through typed models and explicit nullable values:
+
+  export type ImageAsset = {
+    url: string | null;
+  };
+
+  export type Variant = {
+    mrpPrice: number | null;
+    quantity: number | null;
+    posItemCode: string | null;
+  };
+
+  Because API fields can be null, the code checks them safely:
+
+  const price = variant?.mrpPrice ?? 0;
+  const image = product.images?.[0]?.url;
+
+  Other strict-mode practices in the project include:
+
+  - Typed component props:
+
+  export function ProductCard({ product }: { product: Product })
+
+  - Typed async results:
+
+  Promise<{ products: Product[]; count: number; error?: string }>
+
+  - Typed GraphQL responses:
+
+  createApolloClient().query<ProductsResponse>(...)
+
+  - Typed reducer actions using a union:
+
+  type Action =
+    | { type: "add"; item: CartItem }
+    | { type: "remove"; key: string }
+    | { type: "clear" };
+
+  - Explicit React types such as ReactNode.
+  - No unchecked API values are assumed to exist.
+  - noEmit: true ensures TypeScript is used for validation only and does not generate JavaScript files.
+
+  You can verify strict mode with:
+
+  npx tsc --noEmit
+
+  This currently passes in the project.
