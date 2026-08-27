@@ -274,3 +274,66 @@ Overall evaluation: strong implementation for the requested stack and core produ
 
 - Changed the global `--background` color in `src/app/globals.css` to `#f5f5f5`, so the entire page body uses the requested light-gray background. Component-specific surfaces such as the header, cards, hero, cart drawer, and footer remain unchanged.
 - Git snapshot before this update: branch `main`, `HEAD` `e2054ae`, aligned with `origin/main`; the page background change is uncommitted in `src/app/globals.css`. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: ribbon discount badge styling
+
+- Added reusable `src/components/DiscountBadge.tsx` with a red gradient ribbon for listing cards and a compact gradient pill for PDP badges. The badge preserves the existing discount semantics: percentage discounts show `% OFF`/`Save X%`, while flat discounts show `Save ৳X`.
+- Applied the badge to `ProductCard` and `ProductDetails`, including the selected-variant summary and each variant preview. Pricing, stock, variant selection, cart behavior, and API handling are unchanged.
+- The referenced `.git/logs/refs/heads/discount-badge-ui-update` contains the branch creation reflog entry; the current branch is `discount-badge-ui-update`.
+- Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+- Git snapshot after this implementation: `HEAD` `db7a436`, with local `main`, `origin/main`, and `origin/discount-badge-ui-update` aligned at that commit. The ribbon changes are currently uncommitted in `src/components/ProductCard.tsx` and `src/components/ProductDetails.tsx`, with new untracked `src/components/DiscountBadge.tsx`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: two-line discount emphasis
+
+- Updated `DiscountBadge` so both percentage and flat-discount badges intentionally render on two lines with a larger primary value. Percentage badges show the percentage above `OFF`; flat badges show the taka amount above `Save`.
+- The two-line treatment applies to the listing ribbon and compact PDP badges. Discount values, price calculations, and all existing product/cart behavior remain unchanged.
+- Validation passed: `npm run lint` and `npx tsc --noEmit`.
+- Git snapshot after this implementation: branch `discount-badge-ui-update`, `HEAD` `db7a436`, aligned with local `main`, `origin/main`, and `origin/discount-badge-ui-update`. The two-line badge refinement is uncommitted in `src/components/DiscountBadge.tsx`; prior badge component changes remain uncommitted in the related product files. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: lifted discount ribbon
+
+- Moved the listing ribbon down slightly inside the product image area (`top-2`) and strengthened its shadow so it appears lifted and separated from the card edge without being clipped by the card's existing `overflow-hidden` layout.
+- Compact PDP badges are unchanged. Pricing, discount values, product links, and cart behavior remain unchanged.
+- Git snapshot before this update: branch `discount-badge-ui-update`, `HEAD` `db7a436`, aligned with local `main`, `origin/main`, and `origin/discount-badge-ui-update`; the ribbon refinement is uncommitted in `src/components/DiscountBadge.tsx`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: ribbon over card edge
+
+- Repositioned the listing discount ribbon relative to the product card instead of the image area. The card now permits the ribbon to overflow above its top edge, while the image container retains its own rounded-top clipping.
+- The ribbon's red gradient, two-line amount emphasis, detail-page badges, pricing, and cart behavior remain unchanged.
+- Git snapshot before this update: branch `discount-badge-ui-update`, `HEAD` `db7a436`, aligned with local `main`, `origin/main`, and `origin/discount-badge-ui-update`; the card/ribbon refinement is uncommitted in `src/components/ProductCard.tsx` and `src/components/DiscountBadge.tsx`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: ribbon protrusion
+
+- Moved the listing ribbon to `-top-2` relative to the card so its upper section visibly pokes above the card border, matching the supplied visual reference. The card remains `overflow-visible`; the image area retains rounded-top clipping.
+- Validation passed: `npm run lint` and `npx tsc --noEmit`.
+- Git snapshot before this update: branch `discount-badge-ui-update`, `HEAD` `db7a436`, aligned with local `main`, `origin/main`, and `origin/discount-badge-ui-update`; the protrusion refinement is uncommitted in `src/components/DiscountBadge.tsx`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: tighter ribbon spacing
+
+- Reduced the listing ribbon's internal padding and minimum size (`min-h-12 min-w-12`, `px-1 py-0.5`) so the two-line discount value has less empty space while staying legible and protruding above the card.
+- Compact PDP badges, discount semantics, pricing, product links, and cart behavior remain unchanged.
+- Validation passed: `npm run lint` and `npx tsc --noEmit`.
+- Git snapshot before this update: branch `discount-badge-ui-update`, `HEAD` `db7a436`, aligned with local `main`, `origin/main`, and `origin/discount-badge-ui-update`; the tighter ribbon spacing is uncommitted in `src/components/DiscountBadge.tsx`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: darker, tighter, left-aligned ribbon
+
+- Changed both discount badge gradients to darker red shades.
+- Reduced the listing ribbon to `min-h-11 min-w-11`, `px-0.5 py-0`, and left-aligned its two-line content with `items-start text-left`.
+- The ribbon remains positioned at `-top-2` above the product card. Compact PDP badges, discount semantics, pricing, product links, and cart behavior remain unchanged.
+- Validation passed: `npm run lint` and `npx tsc --noEmit`.
+- Git snapshot before this update: branch `discount-badge-ui-update`, `HEAD` `db7a436`, aligned with local `main`, `origin/main`, and `origin/discount-badge-ui-update`; the darker/tighter alignment refinement is uncommitted in `src/components/DiscountBadge.tsx`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: lighter-to-darker ribbon gradient and spacing
+
+- Updated the listing ribbon gradient to use a brighter red at the top and a darker burgundy toward the bottom, matching the supplied visual reference more closely.
+- Added a one-pixel line gap between the discount amount and `OFF`/`Save`, while retaining the compact horizontal padding and left-aligned content.
+- The ribbon remains positioned at `-top-2` above the card. Discount calculations, badge semantics, PDP behavior, product links, and cart behavior remain unchanged.
+- Validation passed: `npm run lint` and `npx tsc --noEmit`.
+- Git snapshot before this update: branch `discount-badge-ui-update`, `HEAD` `db7a436`, aligned with local `main`, `origin/main`, and `origin/discount-badge-ui-update`; the gradient and spacing refinement is uncommitted in `src/components/DiscountBadge.tsx`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest implementation update: centered ribbon content
+
+- Centered the listing ribbon's two-line discount content using `items-center text-center`, which better matches the ribbon's narrow shape and pointed bottom.
+- Preserved the brighter-to-darker gradient, tight spacing, `-top-2` protrusion, discount calculations, PDP behavior, product links, and cart behavior.
+- Validation passed: `npm run lint` and `npx tsc --noEmit`.
+- Git snapshot before this update: branch `discount-badge-ui-update`, `HEAD` `db7a436`, aligned with local `main`, `origin/main`, and `origin/discount-badge-ui-update`; the alignment refinement is uncommitted in `src/components/DiscountBadge.tsx`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.

@@ -6,6 +6,7 @@ import {useCart} from "@/lib/cart";
 import {formatPrice} from "@/components/ProductCard";
 import {discountInfo, sellingPrice, type Product, type ProductAttribute} from "@/lib/types";
 import {RichText} from "@/components/RichText";
+import {DiscountBadge} from "@/components/DiscountBadge";
 
 function InfoList({items}: { items: ProductAttribute[] | null }) {
     const rows = (items ?? []).filter((i) => i.enLabel && i.values?.some((v) => v.enName));
@@ -54,14 +55,13 @@ export function ProductDetails({product}: { product: Product }) {
                 <div className="mt-7 flex items-baseline gap-3"><strong
                     className="text-4xl font-black text-[#ec1c24]">{formatPrice(price)}</strong>{variant?.mrpPrice && variant.mrpPrice > price ?
                     <del className="text-lg text-slate-400">{formatPrice(variant.mrpPrice)}</del> : null}{discount ?
-                    <span
-                        className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">{discount.type === "flat" ? `Save ${formatPrice(discount.value)}` : `Save ${Math.round(discount.value)}%`}</span> : null}
+                    <DiscountBadge discount={discount} compact/> : null}
                 </div>
                 <div className="mt-7 rounded-2xl border border-slate-200 bg-white p-5"><p
                     className="text-xs font-bold uppercase tracking-widest text-slate-400">Choose variant</p>
                     <div className="mt-3 flex flex-wrap gap-2">{(product.variants ?? []).map((item, index) => { const itemDiscount = discountInfo(item); return <button
                         key={item.posItemCode ?? index} onClick={() => setSelectedVariant(index)}
-                        aria-label={`Select variant ${index + 1}`} className={`flex min-w-40 flex-col items-start rounded-xl border px-3 py-2 text-left transition ${selectedVariant === index ? "border-[#ec1c24] bg-red-50 text-[#ec1c24]" : "border-slate-200 text-slate-600 hover:border-[#233f6c]"}`}><span className="text-sm font-bold">Variant {index + 1}</span>{item.posItemCode ? <span className="mt-0.5 text-[10px] font-medium opacity-70">SKU: {item.posItemCode}</span> : null}<span className="mt-2 text-sm font-black">{formatPrice(sellingPrice(item))}</span>{itemDiscount ? <span className="mt-1 text-[10px] font-bold">{itemDiscount.type === "flat" ? `Save ${formatPrice(itemDiscount.value)}` : `Save ${Math.round(itemDiscount.value)}%`}</span> : null}<span className={`mt-1 text-[10px] font-bold ${(item.quantity ?? 0) > 0 ? "text-emerald-600" : "text-red-600"}`}>{(item.quantity ?? 0) > 0 ? `${item.quantity} in stock` : "Out of stock"}</span></button>; })}</div>
+                        aria-label={`Select variant ${index + 1}`} className={`flex min-w-40 flex-col items-start rounded-xl border px-3 py-2 text-left transition ${selectedVariant === index ? "border-[#ec1c24] bg-red-50 text-[#ec1c24]" : "border-slate-200 text-slate-600 hover:border-[#233f6c]"}`}><span className="text-sm font-bold">Variant {index + 1}</span>{item.posItemCode ? <span className="mt-0.5 text-[10px] font-medium opacity-70">SKU: {item.posItemCode}</span> : null}<span className="mt-2 text-sm font-black">{formatPrice(sellingPrice(item))}</span>{itemDiscount ? <DiscountBadge discount={itemDiscount} compact/> : null}<span className={`mt-1 text-[10px] font-bold ${(item.quantity ?? 0) > 0 ? "text-emerald-600" : "text-red-600"}`}>{(item.quantity ?? 0) > 0 ? `${item.quantity} in stock` : "Out of stock"}</span></button>; })}</div>
                     <p className={`mt-4 text-sm font-bold ${(variant?.quantity ?? 0) > 0 ? "text-emerald-600" : "text-red-600"}`}>{(variant?.quantity ?? 0) > 0 ? `${variant?.quantity} units available` : "Out of stock"}</p>
                     <button disabled={!variant || variant.quantity === 0}
                             onClick={() => variant && add(product, variant)}
