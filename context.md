@@ -388,3 +388,10 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - Tested `https://waltonplaza.com.bd/bn` separately; the public site returned HTTP 200. This indicates the public website is reachable, while the development GraphQL API is currently unavailable or rejecting this client connection. It is not evidence that the frontend pagination logic is broken.
 - Check timestamp context: this diagnostic was performed on 2026-08-28 in the configured Asia/Dhaka environment. Re-test later or through Walton's intended network/VPN/API access if the API team reports the service is healthy.
 - Git snapshot before this context update: branch `main`, `HEAD` `628c4bb`, aligned with `origin/main`; existing uncommitted changes remain `context.md` and `src/lib/data.ts`, with untracked `.idea/`.
+
+## Latest Git update: local cache-removal commit not pushed
+
+- Local `main` now has commit `a624f96` (`service is down. Need to review pagination issue`), which includes the removal of Next.js `unstable_cache` from `src/lib/data.ts` and related context updates.
+- After `git fetch origin`, remote `origin/main` remains at `628c4bb`; local `main` is one commit ahead. Therefore the cache removal has not reached GitHub or Vercel yet.
+- The tracked working tree is clean after the commit; only untracked `.idea/` remains as a local IDE artifact.
+- To publish this commit, run `git push origin main`. `git pull` will not upload `a624f96`.
