@@ -337,3 +337,10 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - Preserved the brighter-to-darker gradient, tight spacing, `-top-2` protrusion, discount calculations, PDP behavior, product links, and cart behavior.
 - Validation passed: `npm run lint` and `npx tsc --noEmit`.
 - Git snapshot before this update: branch `discount-badge-ui-update`, `HEAD` `db7a436`, aligned with local `main`, `origin/main`, and `origin/discount-badge-ui-update`; the alignment refinement is uncommitted in `src/components/DiscountBadge.tsx`. Untracked `.idea/`, `issues/`, and `~$ltonplaza-api-reference.docx` remain local artifacts.
+
+## Latest documentation update: evaluation criteria report
+
+- Added `evaluation.md`, a criterion-by-criterion assessment against `walton_frontend_evaluation.pdf`, cross-checked with `waltonplaza-api-reference.docx`, the current implementation, `README.md`, and `guideline.md`.
+- The report records evidence and verification paths for all 19 criteria, including pagination rationale, loading/error behavior, cart persistence, server/client boundaries, Apollo caching, and React 19 `useOptimistic` usage.
+- It explicitly records partial/API-constrained areas: no dedicated price-range filter, no documented rating field, brand used as the category-like filter, manually maintained GraphQL types, page-scoped client filtering/sorting, and no literal card-level add-to-cart CTA.
+- Git snapshot before this documentation update: branch `main`, `HEAD` `f27a24b`, aligned with `origin/main`, `origin/discount-badge-ui-update`, and local `discount-badge-ui-update`; `evaluation.md` is untracked. Untracked `.idea/` and `~$ltonplaza-api-reference.docx` remain local artifacts.
