@@ -130,6 +130,8 @@ API behavior to handle:
 - Its default request fetches product details by UID `P-4TCF9V` and includes basic Postman tests for HTTP success, `getProducts`, and API `statusCode`.
 - The Postman request sets `posItemCode` to `null` while querying by UID. To query by POS item code, set `uid` to `null` and use the `posItemCode` variable in the request JSON.
 - The collection now overrides Postman's default user agent with `Mozilla/5.0`, limits accepted compression to gzip/deflate, and sends `Connection: close`; these work around the Walton server's connection reset behavior.
+- `postman.json` now contains a second `Get All Products` POST request. It uses `filter: { isActive: null }`, the shared `skip`/`limit` variables, listing fields (`uid`, `enName`, images, variants), and tests HTTP/API success plus the returned product array. It stores the API total in the Postman environment variable `totalProducts`.
+- The user referred to this file as `postman.js`; the actual collection filename is `postman.json`, which is the correct Postman collection format.
 
 ## Initial setup command already recommended
 
@@ -159,3 +161,4 @@ This has already been run successfully in this workspace. It established the Nex
 - Assignment implementation commit history, oldest to newest: `232f387` initial app implementation; `7e611dd` cart drawer and idempotent persistence; `a161e58` cart drawer viewport layout fix; `54ee3a7` Walton visual refinement; `dfdae7d` removal of the unknown Tailwind theme rule.
 - At this context update, tracked `AGENTS.md` and `context.md` contain the new context-maintenance documentation and are uncommitted; there are no uncommitted application-code changes. Untracked `.idea/` exists as local IDE metadata and is not assignment functionality.
 - Future context updates must record the current branch, HEAD commit, relationship to `main`, merge status, tracked/untracked status, and validation results. Never describe work on another branch as merged until Git history confirms it.
+- Latest Git snapshot after the Postman change: branch `getProducts-postman-request-add`, HEAD `3d5f1ca` (`fix-agent file updated`), with `postman.json` modified but uncommitted. HEAD is ahead of `main` at `dfdae7d` and this branch is not merged into `main`; untracked `.idea/` and `~$ltonplaza-api-reference.docx` are local workspace artifacts and not assignment features.
