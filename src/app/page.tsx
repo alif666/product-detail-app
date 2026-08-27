@@ -35,11 +35,17 @@ export default async function Home({searchParams}: Props) {
             <div id="products" className="mb-6 flex items-end justify-between gap-4">
                 <div className="flex flex-col items-start"><p className="text-sm font-bold uppercase tracking-widest text-[#1a998d]">Shop collection</p><h2
                     className="mt-1 text-3xl font-black text-[#192d4d]">Featured products</h2></div>
-                <div className="flex shrink-0 items-center gap-4"><PageSizeSelect value={limit}/><span className="hidden text-sm text-slate-500 lg:block">{data.count.toLocaleString()} products available</span></div>
+                <div className="flex shrink-0 items-center gap-4"><PageSizeSelect value={limit}/>
+                    <span className="hidden text-sm text-slate-500 lg:block">{data.count.toLocaleString()} products available</span>
+                </div>
             </div>
             {data.error ?
-                <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">{data.error}</div> : <>
-                    <ProductGrid products={data.products}/><Pagination page={page} totalPages={totalPages} limit={limit}/></>}</main>
+                <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">{data.error}</div> :
+                <>
+                    <ProductGrid products={data.products}/><Pagination page={page} totalPages={totalPages} limit={limit}/>
+                </>
+            }
+        </main>
         <footer id="why-us"
                 className="border-t border-[#233f6c] bg-[#192d4d] px-5 py-10 text-center text-sm text-slate-300">Walton
             Plaza · Built for better living
