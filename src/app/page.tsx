@@ -3,12 +3,14 @@ import {Pagination} from "@/components/Pagination";
 import {ProductGrid} from "@/components/ProductGrid";
 import {getProducts} from "@/lib/data";
 import {SparklesIcon} from "@/components/Icons";
+import {PageSizeSelect} from "@/components/PageSizeSelect";
+import {DEFAULT_PAGE_SIZE, normalizePageSize} from "@/lib/pagination";
 
-type Props = { searchParams: Promise<{ page?: string }> };
+type Props = { searchParams: Promise<{ page?: string; limit?: string }> };
 export default async function Home({searchParams}: Props) {
     const params = await searchParams;
     const page = Math.max(1, Number(params.page) || 1);
-    const limit = 12;
+    const limit = normalizePageSize(params.limit ?? String(DEFAULT_PAGE_SIZE));
     const data = await getProducts((page - 1) * limit, limit);
     const totalPages = Math.max(1, Math.ceil(data.count / limit));
     return <><Header/>
@@ -30,14 +32,14 @@ export default async function Home({searchParams}: Props) {
                         className="mt-4 text-sm font-bold text-slate-500">Comfort for every home</p></div>
                 </div>
             </section>
-            <div id="products" className="mb-6 flex items-end justify-between">
+            <div id="products" className="mb-6 flex items-end justify-between gap-4">
                 <div className="flex flex-col items-start"><p className="text-sm font-bold uppercase tracking-widest text-[#1a998d]">Shop collection</p><h2
                     className="mt-1 text-3xl font-black text-[#192d4d]">Featured products</h2></div>
-                <span className="hidden text-sm text-slate-500 sm:block">{data.count.toLocaleString()} products available</span>
+                <div className="flex shrink-0 items-center gap-4"><PageSizeSelect value={limit}/><span className="hidden text-sm text-slate-500 lg:block">{data.count.toLocaleString()} products available</span></div>
             </div>
             {data.error ?
                 <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">{data.error}</div> : <>
-                    <ProductGrid products={data.products}/><Pagination page={page} totalPages={totalPages}/></>}</main>
+                    <ProductGrid products={data.products}/><Pagination page={page} totalPages={totalPages} limit={limit}/></>}</main>
         <footer id="why-us"
                 className="border-t border-[#233f6c] bg-[#192d4d] px-5 py-10 text-center text-sm text-slate-300">Walton
             Plaza · Built for better living
