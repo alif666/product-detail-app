@@ -423,3 +423,16 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - Listing-page discount ribbons remain two-line badges. Pricing, discount calculations, product selection, cart behavior, and server caching remain unchanged.
 - Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 - Git snapshot: branch `12-server-side-caching`, `HEAD` and `origin/12-server-side-caching` at `4d890d6`; `src/components/DiscountBadge.tsx`, `src/lib/data.ts`, and `context.md` are uncommitted. Untracked `.idea/` remains a local artifact.
+
+## Latest documentation/UI update
+
+- Updated `README.md` to document the controlled Next.js server cache (120 seconds for listings, 60 seconds for details, no failed-response caching) and transition skeleton behavior for page-size and pagination navigation.
+- Updated `src/components/ProductGrid.tsx` search placeholder to `Search with Product ID`; the existing automatic UID search behavior is unchanged.
+- Validation passed: `npm run lint` and `npx tsc --noEmit`.
+- Git snapshot: branch `main`, `HEAD` and `origin/main` at `cd576fd`; `README.md`, `context.md`, and `src/components/ProductGrid.tsx` are uncommitted. Staged deletions of supplementary `evaluation.md` and `guideline.md` and untracked `.idea/` remain existing worktree state.
+
+## Latest documentation update: README performance notes
+
+- Added the restored Next.js server-cache policy to `README.md`: public listing reads revalidate after 120 seconds and product-detail reads after 60 seconds; cache keys include function arguments and failed API/network responses are not cached.
+- Documented the React transition skeleton behavior for page-size changes and numbered/Previous/Next pagination. Existing product, search, pagination, cart, and API behavior documentation remains unchanged.
+- Git snapshot: branch `main`, `HEAD` and `origin/main` at `cd576fd`; `README.md` is modified but uncommitted. Staged deletions of supplementary `evaluation.md` and `guideline.md` are preserved as existing user/worktree changes; untracked `.idea/` remains a local artifact.

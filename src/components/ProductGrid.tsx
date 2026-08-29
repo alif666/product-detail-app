@@ -56,7 +56,7 @@ export function ProductGrid({products, initialSearch = ""}: { products: Product[
             className="mb-7 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
             <form onSubmit={submitSearch} className="contents"><label className="sr-only" htmlFor="search">Search products or product ID</label><input id="search" value={search}
                                                                                       onChange={(e) => handleSearchChange(e.target.value)}
-                                                                                      placeholder="Search products or product ID..."
+                                                                                      placeholder="Search with Product ID"
                                                                                       className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none ring-[#ec1c24] focus:ring-2"/><button type="submit" className="sr-only">Search</button></form><select
             value={category} onChange={(e) => setCategory(e.target.value)}
             className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm">

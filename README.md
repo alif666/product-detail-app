@@ -33,6 +33,7 @@ Open `http://localhost:3000`. The product listing uses the live API and product 
 - `src/app/page.tsx` is the server-rendered product listing route. It fetches a paginated slice using the API's `skip` and `limit` fields.
 - `src/app/products/[uid]/page.tsx` is the dynamic server-rendered product detail route.
 - `src/lib/apollo.ts`, `queries.ts`, `data.ts`, and `types.ts` form the typed GraphQL/data layer. Apollo's `InMemoryCache` uses `cache-first` reads.
+- Public product reads also use controlled Next.js server caching in `src/lib/data.ts`: listing results revalidate after 120 seconds and product-detail results after 60 seconds. Cache keys include the function arguments, and API/network failures are not cached.
 - Interactive filters, product interactions, tabs, variants, and cart behavior are isolated in client components.
 - `src/lib/cart.tsx` provides add, remove, update, clear, optimistic feedback, and localStorage persistence.
 
@@ -41,7 +42,7 @@ Open `http://localhost:3000`. The product listing uses the live API and product 
 - Pagination is used because the API explicitly provides offset pagination with `skip` and `limit`; it keeps the initial payload small.
 - Product-name search remains a responsive client-side filter for the loaded page. Once an 8-character UID such as `P-4TCF9V` is entered, the app automatically uses the API's `uid` filter and renders the single matching product card; the card keeps the existing navigation to the product detail page. Clearing the field restores the normal listing without changing cart behavior. Enter remains supported as a fallback for submitting/clearing the search.
 - The listing defaults to 12 products per page and provides 20 and 30 page-size options. The selected size is stored in the URL as `limit`, resets to page 1 when changed, and is preserved across numbered pagination links. The application caps the requested page size at 30 to match the API behavior.
-- Route-level loading skeletons provide immediate feedback during slow listing and detail API navigation, including page-size changes, pagination, opening products, and returning to the listing.
+- Route-level loading skeletons provide immediate feedback during slow listing and detail API navigation, including opening products and returning to the listing. The listing navigation boundary uses a React transition so changing page size or clicking numbered, Previous, or Next pagination immediately replaces the listing area with the product skeleton while the new server-rendered result loads.
 - Product cards use `next/image`, responsive `sizes`, remote image configuration, lazy loading, a missing-image fallback, and hover feedback.
 - The live API exposes brand-like attributes, so the listing's category control uses available brand attributes. Rating is not present in the documented or tested live response, so no rating data is fabricated.
 - API arrays may be null or empty and are rendered safely. Products with zero quantity cannot be added to the cart.
