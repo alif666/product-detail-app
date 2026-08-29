@@ -395,3 +395,17 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - After `git fetch origin`, remote `origin/main` remains at `628c4bb`; local `main` is one commit ahead. Therefore the cache removal has not reached GitHub or Vercel yet.
 - The tracked working tree is clean after the commit; only untracked `.idea/` remains as a local IDE artifact.
 - To publish this commit, run `git push origin main`. `git pull` will not upload `a624f96`.
+
+## Latest implementation update: navigation skeleton restored
+
+- Restored `src/components/ListingNavigation.tsx` with a React transition around listing navigation. Changing records per page or clicking numbered/Previous/Next pagination now immediately displays `ProductSectionSkeleton` while the new server-rendered result loads.
+- Updated `PageSizeSelect.tsx`, `Pagination.tsx`, and `src/app/page.tsx` to use the transition navigation boundary. Existing URL parameters, page-size options, numbered pagination, search, filters, sorting, product details, and cart behavior remain unchanged.
+- Next.js server caching remains disabled; no `unstable_cache` or `revalidate` was added.
+- Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+- Git snapshot: branch `main`, local and `origin/main` at `259387d`; these implementation files are currently uncommitted. Untracked `.idea/` remains a local artifact.
+
+## Latest bug fix: client hook boundary for navigation skeleton
+
+- Fixed the Next.js Server/Client Component error by adding `"use client"` to `src/components/Pagination.tsx`. `Pagination` now safely calls `useListingNavigation()` while remaining compatible with the server-rendered page through serializable props.
+- Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+- Git snapshot: branch `main`, local and `origin/main` at `259387d`; the navigation skeleton changes and this context update are uncommitted. Untracked `.idea/` remains a local artifact.

@@ -1,18 +1,19 @@
 "use client";
 
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {usePathname, useSearchParams} from "next/navigation";
 import {PAGE_SIZE_OPTIONS} from "@/lib/pagination";
+import {useListingNavigation} from "@/components/ListingNavigation";
 
 export function PageSizeSelect({value}: { value: number }) {
-    const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const {navigate} = useListingNavigation();
 
     function handleChange(nextValue: string) {
         const params = new URLSearchParams(searchParams.toString());
         params.set("page", "1");
         params.set("limit", nextValue);
-        router.push(`${pathname}?${params.toString()}#products`, {scroll: false});
+        navigate(`${pathname}?${params.toString()}#products`);
     }
 
     return <label className="flex items-center gap-2 text-sm font-semibold text-slate-500">
