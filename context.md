@@ -404,8 +404,22 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 - Git snapshot: branch `main`, local and `origin/main` at `259387d`; these implementation files are currently uncommitted. Untracked `.idea/` remains a local artifact.
 
+## Latest implementation update: controlled server caching restored
+
+- Restored Next.js `unstable_cache` in `src/lib/data.ts` for public product reads: listing results revalidate after 120 seconds and product details after 60 seconds, keyed separately from request arguments and preserving API error handling without caching failures.
+- Apollo `cache-first`, the lightweight listing query, Suspense shell, records-per-page controls, numbered pagination, and transition skeleton behavior remain unchanged.
+- Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+- Git snapshot: branch `12-server-side-caching`, `HEAD` `4d890d6`, aligned with local `main`, `origin/main`, `origin/12-server-side-caching`, and `origin/HEAD`. The caching change and this context update are uncommitted; untracked `.idea/` remains a local artifact.
+
 ## Latest bug fix: client hook boundary for navigation skeleton
 
 - Fixed the Next.js Server/Client Component error by adding `"use client"` to `src/components/Pagination.tsx`. `Pagination` now safely calls `useListingNavigation()` while remaining compatible with the server-rendered page through serializable props.
 - Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 - Git snapshot: branch `main`, local and `origin/main` at `259387d`; the navigation skeleton changes and this context update are uncommitted. Untracked `.idea/` remains a local artifact.
+
+## Latest implementation update: compact detail discount badges
+
+- Updated only the `compact` mode of `src/components/DiscountBadge.tsx` so detail-page badges render on one line: `10% OFF` or `৳500 Save`.
+- Listing-page discount ribbons remain two-line badges. Pricing, discount calculations, product selection, cart behavior, and server caching remain unchanged.
+- Validation passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
+- Git snapshot: branch `12-server-side-caching`, `HEAD` and `origin/12-server-side-caching` at `4d890d6`; `src/components/DiscountBadge.tsx`, `src/lib/data.ts`, and `context.md` are uncommitted. Untracked `.idea/` remains a local artifact.
