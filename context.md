@@ -469,3 +469,10 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - Changed the root `vercel.json` Function region from Mumbai (`bom1`) to Singapore (`sin1`) for the next deployment.
 - The Mumbai performance baseline remains in `performance-mumbai-baseline.md` and must be retained for comparison.
 - No application source files were changed. The region switch, context update, and performance report are uncommitted; pre-existing untracked `.idea/` remains untouched.
+
+## Latest Singapore performance comparison
+
+- Verified the live deployment executes its Vercel Function in Singapore: `X-Vercel-Id` reported `bom1::sin1::...`.
+- Repeated the Mumbai test with 30 homepage requests: 100% HTTP 200, average 480.5 ms, p50 450.2 ms, p95 774.6 ms, maximum 821.1 ms, and average TTFB 380.1 ms.
+- Compared with the Mumbai baseline, Singapore was slower by 96.3 ms average, 121.2 ms p50, and 75.7 ms p95 in this test environment. The detailed comparison is recorded in `performance-mumbai-baseline.md`.
+- Git snapshot before this report update: branch `main`, `HEAD` `ce3675a` (`vercel region changed to singapore`), aligned with `origin/main`; this report and context update are uncommitted. No application source files changed.
