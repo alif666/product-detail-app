@@ -448,3 +448,10 @@ Overall evaluation: strong implementation for the requested stack and core produ
 ## Latest configuration update: ignore interview preparation notes
 
 - Added `/interview-preparation.md` to `.gitignore` at the user's request, so the local interview guide will not appear as an untracked Git file.
+
+## Latest deployment configuration update
+
+- Added the root `vercel.json` configuration with `regions: ["bom1"]` so Vercel Functions execute in the Mumbai, India region, closer to the Bangladesh database and service.
+- Static assets remain served through Vercel's global CDN; this setting does not relocate the external database or backend service.
+- Validation: `vercel.json` contains valid JSON and no build or application source files were changed for this update.
+- Git snapshot after this update: branch `main`, `HEAD` `fe3ff11`, aligned with `origin/main`; `vercel.json` and this context update are uncommitted. Pre-existing untracked `.idea/` remains untouched. No work is claimed as pushed or merged.
