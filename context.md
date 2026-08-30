@@ -436,3 +436,15 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - Added the restored Next.js server-cache policy to `README.md`: public listing reads revalidate after 120 seconds and product-detail reads after 60 seconds; cache keys include function arguments and failed API/network responses are not cached.
 - Documented the React transition skeleton behavior for page-size changes and numbered/Previous/Next pagination. Existing product, search, pagination, cart, and API behavior documentation remains unchanged.
 - Git snapshot: branch `main`, `HEAD` and `origin/main` at `cd576fd`; `README.md` is modified but uncommitted. Staged deletions of supplementary `evaluation.md` and `guideline.md` are preserved as existing user/worktree changes; untracked `.idea/` remains a local artifact.
+
+## Latest documentation update: interview preparation guide
+
+- Added `interview-preparation.md`, a source-code-based interview study guide for the Walton Plaza product-detail app.
+- The guide documents the complete request/render workflow from App Router routes through Apollo GraphQL, typed data helpers, server caching, Suspense/streaming, client components, PDP interactions, pricing, cart reducer/persistence, security, performance, API limitations, likely interview questions, and a five-minute explanation script.
+- It explicitly records current implementation boundaries: listing filters and sorting are page-scoped, the category-like selector uses the available Brand attribute, no rating field is fabricated because it is absent from the tested API, and the current product card is a detail link rather than a card-level add-to-cart CTA.
+- Validation after the documentation work passed: `npm run lint`, `npx tsc --noEmit`, and `npm run build`. The build reported dynamic `/` and `/products/[uid]` routes plus static `/_not-found`.
+- Git snapshot after this update: branch `main`, `HEAD` `3f3b1f3`, aligned with `origin/main`; no merge or rebase is in progress. The new `interview-preparation.md` is untracked, the pre-existing `README.md` modification remains uncommitted, and untracked `.idea/` remains a local IDE artifact. No work is claimed as merged beyond the confirmed `main`/`origin/main` alignment.
+
+## Latest configuration update: ignore interview preparation notes
+
+- Added `/interview-preparation.md` to `.gitignore` at the user's request, so the local interview guide will not appear as an untracked Git file.
