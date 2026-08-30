@@ -455,3 +455,17 @@ Overall evaluation: strong implementation for the requested stack and core produ
 - Static assets remain served through Vercel's global CDN; this setting does not relocate the external database or backend service.
 - Validation: `vercel.json` contains valid JSON and no build or application source files were changed for this update.
 - Git snapshot after this update: branch `main`, `HEAD` `fe3ff11`, aligned with `origin/main`; `vercel.json` and this context update are uncommitted. Pre-existing untracked `.idea/` remains untouched. No work is claimed as pushed or merged.
+
+## Latest Mumbai performance baseline
+
+- Recorded a 30-request HTTPS baseline for `https://product-detail-app.vercel.app/` while the deployment reported Vercel region `bom1` (Mumbai).
+- Homepage results from the current test environment: 100% HTTP 200; average 384.2 ms; p50 329.0 ms; p95 698.9 ms; maximum 856.1 ms; average time to first byte 321.3 ms.
+- The product-detail route `/products/P-4TCF9V` did not complete within a 15-second request timeout during the test and is recorded separately in `performance-mumbai-baseline.md`; it is not included in the homepage statistics.
+- Added `performance-mumbai-baseline.md` as the comparison record. No application source files were changed.
+- Git snapshot after this baseline: branch `main`, `HEAD` `cb75220` (`vercel region changed`), aligned with `origin/main`; the region configuration is committed locally but not confirmed pushed by this session. `context.md` and `performance-mumbai-baseline.md` are uncommitted; pre-existing untracked `.idea/` remains untouched.
+
+## Latest deployment region switch
+
+- Changed the root `vercel.json` Function region from Mumbai (`bom1`) to Singapore (`sin1`) for the next deployment.
+- The Mumbai performance baseline remains in `performance-mumbai-baseline.md` and must be retained for comparison.
+- No application source files were changed. The region switch, context update, and performance report are uncommitted; pre-existing untracked `.idea/` remains untouched.
