@@ -21,18 +21,21 @@ async function ProductListingSection({searchParams}: { searchParams: SearchParam
         ? await getProduct(uid).then((result) => ({products: result.product ? [result.product] : [], count: result.product ? 1 : 0, error: result.error}))
         : await getProducts((page - 1) * limit, limit);
     const totalPages = Math.max(1, Math.ceil(data.count / limit));
-    return <ListingNavigation><>
-        <div className="mb-6 flex min-h-9 items-center justify-end gap-4">
-            {!uid && <PageSizeSelect value={limit}/>} 
-            <span className="hidden text-sm text-slate-500 lg:block">{data.count.toLocaleString()} products available</span>
-        </div>
-        {data.error ?
-            <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">{data.error}</div> :
-            <>
-                <ProductGrid key={uid ?? "listing"} products={data.products} initialSearch={uid ?? ""}/>
-                {!uid && <Pagination page={page} totalPages={totalPages} limit={limit}/>} 
-            </>}
-    </></ListingNavigation>;
+    return <ListingNavigation>
+                <>
+                    <div className="mb-6 flex min-h-9 items-center justify-end gap-4">
+                        {!uid && <PageSizeSelect value={limit}/>}
+                        <span className="hidden text-sm text-slate-500 lg:block">{data.count.toLocaleString()} products available</span>
+                    </div>
+                    {data.error ? <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">{data.error}</div>
+                        :
+                            <>
+                                <ProductGrid key={uid ?? "listing"} products={data.products} initialSearch={uid ?? ""}/>
+                                {!uid && <Pagination page={page} totalPages={totalPages} limit={limit}/>}
+                            </>
+                    }
+                </>
+            </ListingNavigation>;
 }
 
 export default function Home({searchParams}: Props) {

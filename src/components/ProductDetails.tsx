@@ -13,7 +13,10 @@ function InfoList({items}: { items: ProductAttribute[] | null }) {
     return rows.length ? <dl className="divide-y divide-slate-100">{rows.map((item) => <div key={item.enLabel}
                                                                                             className="grid gap-1 py-3 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.5fr)]">
         <dt className="text-xs font-bold uppercase tracking-wide text-slate-400">{item.enLabel}</dt>
-        <dd className="text-sm leading-6 text-slate-700"><div className="space-y-2">{item.values?.map((v, index) => v.enName ? <RichText key={`${item.enLabel}-${index}`} value={v.enName} /> : null)}</div></dd>
+        <dd className="text-sm leading-6 text-slate-700">
+            <div className="space-y-2">{item.values?.map((v, index) => v.enName ?
+                <RichText key={`${item.enLabel}-${index}`} value={v.enName}/> : null)}</div>
+        </dd>
     </div>)}</dl> : <p className="py-5 text-sm text-slate-400">No information available.</p>;
 }
 
@@ -59,9 +62,19 @@ export function ProductDetails({product}: { product: Product }) {
                 </div>
                 <div className="mt-7 rounded-2xl border border-slate-200 bg-white p-5"><p
                     className="text-xs font-bold uppercase tracking-widest text-slate-400">Choose variant</p>
-                    <div className="mt-3 flex flex-wrap gap-2">{(product.variants ?? []).map((item, index) => { const itemDiscount = discountInfo(item); return <button
-                        key={item.posItemCode ?? index} onClick={() => setSelectedVariant(index)}
-                        aria-label={`Select variant ${index + 1}`} className={`flex min-w-40 flex-col items-start rounded-xl border px-3 py-2 text-left transition ${selectedVariant === index ? "border-[#ec1c24] bg-red-50 text-[#ec1c24]" : "border-slate-200 text-slate-600 hover:border-[#233f6c]"}`}><span className="text-sm font-bold">Variant {index + 1}</span>{item.posItemCode ? <span className="mt-0.5 text-[10px] font-medium opacity-70">SKU: {item.posItemCode}</span> : null}<span className="mt-2 text-sm font-black">{formatPrice(sellingPrice(item))}</span>{itemDiscount ? <DiscountBadge discount={itemDiscount} compact/> : null}<span className={`mt-1 text-[10px] font-bold ${(item.quantity ?? 0) > 0 ? "text-emerald-600" : "text-red-600"}`}>{(item.quantity ?? 0) > 0 ? `${item.quantity} in stock` : "Out of stock"}</span></button>; })}</div>
+                    <div className="mt-3 flex flex-wrap gap-2">{(product.variants ?? []).map((item, index) => {
+                        const itemDiscount = discountInfo(item);
+                        return <button
+                            key={item.posItemCode ?? index} onClick={() => setSelectedVariant(index)}
+                            aria-label={`Select variant ${index + 1}`}
+                            className={`flex min-w-40 flex-col items-start rounded-xl border px-3 py-2 text-left transition ${selectedVariant === index ? "border-[#ec1c24] bg-red-50 text-[#ec1c24]" : "border-slate-200 text-slate-600 hover:border-[#233f6c]"}`}>
+                            <span className="text-sm font-bold">Variant {index + 1}</span>{item.posItemCode ? <span
+                            className="mt-0.5 text-[10px] font-medium opacity-70">SKU: {item.posItemCode}</span> : null}<span
+                            className="mt-2 text-sm font-black">{formatPrice(sellingPrice(item))}</span>{itemDiscount ?
+                            <DiscountBadge discount={itemDiscount} compact/> : null}<span
+                            className={`mt-1 text-[10px] font-bold ${(item.quantity ?? 0) > 0 ? "text-emerald-600" : "text-red-600"}`}>{(item.quantity ?? 0) > 0 ? `${item.quantity} in stock` : "Out of stock"}</span>
+                        </button>;
+                    })}</div>
                     <p className={`mt-4 text-sm font-bold ${(variant?.quantity ?? 0) > 0 ? "text-emerald-600" : "text-red-600"}`}>{(variant?.quantity ?? 0) > 0 ? `${variant?.quantity} units available` : "Out of stock"}</p>
                     <button disabled={!variant || variant.quantity === 0}
                             onClick={() => variant && add(product, variant)}
